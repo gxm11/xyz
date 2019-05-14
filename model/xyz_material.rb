@@ -54,7 +54,7 @@ module XYZ
     end
 
     def materials
-      ms = DB_Material.where(state: "").all + DB_Material.where(state: @name).all
+      ms = DB_Material.all
       ms.sort { |m1, m2| m1[:id] <=> m2[:id] }
     end
   end

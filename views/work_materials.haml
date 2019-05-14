@@ -12,6 +12,7 @@
       %th{width: "1%"}
       %th mid
       %th name
+      %th user
       %th info
     - for material in @user.materials do
       - id = material[:id]
@@ -19,7 +20,8 @@
         %td
           %input{type: "checkbox", name: "mid[]", value: id, id: id}
         %td=material[:id]
-        %td=material[:name] + (material[:state].empty? ? "" : "*")
+        %td=material[:name]
+        %td=material[:state]
         %td=material[:info]
 
 :javascript
