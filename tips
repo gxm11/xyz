@@ -9,3 +9,9 @@ try run in conda env:
 conda create --no-default-packages -n ruby ruby
 ```
 Failed, ruby-dev is needed
+
+try install gems in w003:
+`gem install --user-install rack -v=1.6.4`
+- rack: 1.6.4
+- sinatra: 1.4.8
+- thin: 1.7.2
