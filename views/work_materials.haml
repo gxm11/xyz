@@ -1,0 +1,29 @@
+%h4
+  Materials
+
+%form{mathod: "POST", action: "/task/v1/update_collection"}
+  %p
+    Name:
+    %input{type: "text", name: "name"}
+    %input{type: "submit", value: "Add Collection"}
+
+  %table
+    %tr
+      %th{width: "1%"}
+      %th mid
+      %th name
+      %th info
+    - for material in @user.materials do
+      - id = material[:id]
+      %tr{onclick: "toggle_checkbox(#{id})"}
+        %td
+          %input{type: "checkbox", name: "mid[]", value: id, id: id}
+        %td=material[:id]
+        %td=material[:name] + (material[:state].empty? ? "" : "*")
+        %td=material[:info]
+
+:javascript
+  function toggle_checkbox(id) {
+    checkbox = document.getElementById(id)
+    checkbox.checked = !checkbox.checked
+  }

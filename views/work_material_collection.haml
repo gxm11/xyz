@@ -1,0 +1,10 @@
+%a{href: "/work/#{@user.name}/materials"}
+  Update Collections
+
+%h4
+  Material Collections
+
+%ol  
+- for name, ids in @user.material_collections
+  %li
+    %a="#{name} (#{ids.size})"

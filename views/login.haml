@@ -1,0 +1,10 @@
+%h3 Login
+%form{:method => "POST", :action => "/login_check"}
+  %p Username:  
+  %input{:type => "text", :name => "username"}
+  %p Password:
+  %input{:type => "text", :name => "password"}
+  %p
+  %input{:type => "submit", :value => "login"}
+  %h4 Activekey:
+  %input{:type => "text", :name => "activekey"}

@@ -1,0 +1,11 @@
+# cmds
+**run top**
+```ruby
+`top -b -n 1`
+```
+
+try run in conda env:
+```
+conda create --no-default-packages -n ruby ruby
+```
+Failed, ruby-dev is needed

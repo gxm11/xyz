@@ -1,0 +1,14 @@
+!!!
+
+%html
+  %head
+    %title xyz-project
+    %meta{:"http-equiv"=>"Content-Type", :content=>"text/html", :charset=>"utf-8"}
+    %link{:rel=>"stylesheet", :type=>"text/css", :href=>"/style.css"}
+  %body        
+    %a{href: "/"} XYZ-Project      
+    %aside      
+      %a{href: "/work"}=@user ? "Work: " + @user.name : "Work"
+      %a{href: "/login"} Login
+    %hr
+    != yield

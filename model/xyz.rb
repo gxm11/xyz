@@ -1,0 +1,12 @@
+require "haml"
+require "rdiscount"
+require "crack"
+require "json"
+require "openssl"
+require "persist"
+require "sequel"
+
+require "./model/xyz_db"
+require "./model/xyz_task"
+require "./model/xyz_auth"
+require "./model/xyz_material"

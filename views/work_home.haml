@@ -1,0 +1,18 @@
+%h4
+  Works:
+  %ul
+    %li
+      %a{href: "/work/#{@user.name}/insert_material"} Insert Materials to Database
+    %li
+      %a{href: "/work/#{@user.name}/material_collection"} Create Material Collections
+    %li
+      %a Add Task Codes
+    %li
+      %a Commit and Check Tasks
+
+- if @user.name == "admin"
+  %h4
+    Admin:
+    %ul
+      %li
+        %a{href: "/work/admin/active_keys"} Insert Active Keys
