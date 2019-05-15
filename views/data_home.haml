@@ -1,0 +1,15 @@
+%h4 Materials
+
+%table
+  %tr
+    %th mid
+    %th name
+    %th user
+  - for material in @materials
+    %tr
+      %td{width: "1%", style: "text-align: center"}=material[:id]
+      %td
+        %a{href: "/data/#{material[:id]}/#{material[:name]}"}
+          =material[:name]
+      %td=material[:state]
+

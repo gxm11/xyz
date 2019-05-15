@@ -115,3 +115,24 @@ get "/task/v1/:task" do
     redirect request.referrer
   end
 end
+
+# -----------------------------------------------
+# data
+# -----------------------------------------------
+get "/data" do
+  @materials = XYZ::Material.materials()
+  haml :data_home
+end
+
+get "/data/:mid/:name" do
+  @m = XYZ::Material.material(@params[:mid])
+  haml :data_material
+end
+
+# -----------------------------------------------
+# file
+# -----------------------------------------------
+get "/file/materials/*" do
+  fn = params["splat"].first
+  send_file "./materials/#{fn}"
+end

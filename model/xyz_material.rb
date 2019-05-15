@@ -27,6 +27,14 @@ module XYZ
     def delete(mid)
       DB_Material.where(id: mid).delete
     end
+
+    def material(mid)
+      DB_Material.where(id: mid).first
+    end
+
+    def materials(select_hash = {})
+      DB_Material.where(select_hash).all
+    end
   end
 
   # ---------------------------------------------
@@ -78,10 +86,10 @@ module XYZ
   end
 
   Task.add(:update_collection) do |user, params|
-    name = params["name"]
+    cid = params["cid"]
     mid = params["mid"]
-    if name != ""
-      User.new(user).material_collection_update(name, mid)
+    if cid != ""
+      User.new(user).material_collection_update(cid, mid)
     end
   end
 end

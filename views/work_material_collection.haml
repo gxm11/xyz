@@ -10,3 +10,6 @@
   %li
     %a{href: "/work/#{@user.name}/materials?cid=#{name}"}
       ="#{name} (#{ids.size})"
+    %aside
+      %a{href: "/task/v1/update_collection?cid=#{name}"}
+        Delete

@@ -1,0 +1,13 @@
+- id = @m[:id]
+%h4
+  =@m[:name]
+  %aside
+    %p="(id: #{id})"
+%hr
+
+- for fn in JSON.load(@m[:info])  
+  =fn
+  %aside
+    %a{href: "/file/materials/#{id}/#{fn}"} download
+  %pre
+    =File.read("materials/#{id}/#{fn}")
