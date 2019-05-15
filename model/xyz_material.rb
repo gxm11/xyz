@@ -23,6 +23,10 @@ module XYZ
     def update(mid, update_hash)
       DB_Material.where(id: mid).update(update_hash)
     end
+
+    def delete(mid)
+      DB_Material.where(id: mid).delete
+    end
   end
 
   # ---------------------------------------------
@@ -42,13 +46,13 @@ module XYZ
       DB_PS[key]
     end
 
-    def material_collection_update(name, mids)
+    def material_collection_update(cid, mids)
       key = pskey "material_collections"
       DB_PS.transaction do |db|
         if mids
-          db[key][name] = mids
+          db[key][cid] = mids.collect { |id| id.to_i }
         else
-          db[key].delete(name)
+          db[key].delete(cid)
         end
       end
     end
@@ -64,16 +68,20 @@ module XYZ
   # ---------------------------------------------
   Task.add(:insert_material) do |user, params|
     name = params["name"]
-    info = Crack::XML.parse(params["info"])["material"]
-    mid = Material.insert(name, info)
-    if params["pravite"] == "pravite"
-      Material.update(mid, state: user)
+    if name != ""
+      info = Crack::XML.parse(params["info"])["material"] || {}
+      mid = Material.insert(name, info)
+      if params["pravite"] == "pravite"
+        Material.update(mid, state: user)
+      end
     end
   end
 
   Task.add(:update_collection) do |user, params|
     name = params["name"]
     mid = params["mid"]
-    User.new(user).material_collection_update(name, mid)
+    if name != ""
+      User.new(user).material_collection_update(name, mid)
+    end
   end
 end

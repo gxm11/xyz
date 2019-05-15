@@ -1,11 +1,12 @@
 %h4
   Materials
 
-%form{mathod: "POST", action: "/task/v1/update_collection"}
+%form{method: "POST", action: "/task/v1/update_collection"}
   %p
     Name:
-    %input{type: "text", name: "name"}
-    %input{type: "submit", value: "Add Collection"}
+    %input{type: "text", name: "name", value: @cid}
+    %input{type: "submit", value: "Update Collection"}
+    %button{type:"button", onclick: "check_all()"} Select all / Unselect all
 
   %table
     %tr
@@ -16,9 +17,10 @@
       %th info
     - for material in @user.materials do
       - id = material[:id]
+      - check = @collection.include?(id)
       %tr{onclick: "toggle_checkbox(#{id})"}
         %td
-          %input{type: "checkbox", name: "mid[]", value: id, id: id}
+          %input{type: "checkbox", name: "mid[]", value: id, id: id, checked: check}
         %td=material[:id]
         %td=material[:name]
         %td=material[:state]
@@ -26,6 +28,14 @@
 
 :javascript
   function toggle_checkbox(id) {
-    checkbox = document.getElementById(id)
+    var checkbox = document.getElementById(id)
     checkbox.checked = !checkbox.checked
+  }
+
+  function check_all() {
+    var checkboxes = document.getElementsByName("mid[]")
+    var checked = !checkboxes[0].checked
+    for (var i=0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = checked
+    }
   }

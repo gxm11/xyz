@@ -10,7 +10,7 @@ conda create --no-default-packages -n ruby ruby
 ```
 Failed, ruby-dev is needed
 
-try install gems in w003:
+try install gems in w003 (with ruby 2.1.9p490, gem 2.2.5):
 `gem install --user-install rack -v=1.6.4`
 - rack: 1.6.4
 - sinatra: 1.4.8

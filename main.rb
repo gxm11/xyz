@@ -63,6 +63,21 @@ get "/work/admin/active_keys" do
   pass
 end
 
+get "/work/:name/materials" do
+  @cid = @params[:cid] || ""
+  if @cid.split(".", 2).size == 2
+    user, cid = @cid.split(".", 2)
+    collection = XYZ::User.new(user).material_collections[cid]
+  end
+  if collection
+    @collection = collection
+    @cid = ""
+  else
+    @collection = @user.material_collections[@cid] || []
+  end
+  pass
+end
+
 # -----------------------------------------------
 # render with template
 # -----------------------------------------------

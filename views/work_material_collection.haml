@@ -1,5 +1,6 @@
-%a{href: "/work/#{@user.name}/materials"}
-  Update Collections
+%form{method: "get", action: "/work/#{@user.name}/materials"}  
+  Create Collection:
+  %input{type: "text", name: "cid"}
 
 %h4
   Material Collections
@@ -7,4 +8,5 @@
 %ol  
 - for name, ids in @user.material_collections
   %li
-    %a="#{name} (#{ids.size})"
+    %a{href: "/work/#{@user.name}/materials?cid=#{name}"}
+      ="#{name} (#{ids.size})"
