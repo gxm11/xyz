@@ -5,9 +5,26 @@
     %p="(id: #{id})"
 %hr
 
-- for fn in JSON.load(@m[:info])  
-  =fn
+- for fn in JSON.load(@m[:info])
+  %p
+  %a{onclick: "toggle_file('#{fn}')"}
+    =fn
   %aside
     %a{href: "/file/materials/#{id}/#{fn}"} download
-  %pre
-    =File.read("materials/#{id}/#{fn}")
+  %div{id: fn, style: "display: none"}
+    - if ["png", "jpeg", "jpg", "gif"].include?(fn.split(".").last.downcase)
+      %p
+        %img{src: "/file/materials/#{id}/#{fn}"}
+    - else
+      %pre
+        =File.read("materials/#{id}/#{fn}")
+
+:javascript
+  function toggle_file(fn) {
+    var div = document.getElementById(fn)
+    if (div.style.display == "none") {
+      div.style.display = "block"
+    } else {
+      div.style.display = "none"
+    }
+  }
