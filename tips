@@ -15,3 +15,15 @@ try install gems in w003 (with ruby 2.1.9p490, gem 2.2.5):
 - rack: 1.6.4
 - sinatra: 1.4.8
 - thin: 1.7.2
+
+Use cookies via wget:
+```
+wget --save-cookie cookie.txt \
+     --keep-session-cookies \
+     --post-data "username=gxm&password=123&activekey=" \
+     http://localhost:4567/login_check
+
+wget --load-cookie cookie.txt \
+     --keep-session-cookies \
+     http://localhost:4567/work/gxm/home  
+```
