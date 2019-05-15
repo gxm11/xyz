@@ -1,7 +1,9 @@
-%code Set user.cid to copy other's collection
+%p
+  %code Use 'user.cid' to copy a collection.
+
 %form{method: "get", action: "/work/#{@user.name}/materials"}  
   Create Collection:
-  %input{type: "text", cid: "cid"}
+  %input{type: "text", name: "cid"}
 
 %h4
   Material Collections
@@ -13,4 +15,4 @@
       ="#{cid} (#{ids.size})"
     %aside
       %a{href: "/task/v1/update_collection?cid=#{cid}"}
-        Delete
+        delete
