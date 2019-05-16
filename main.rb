@@ -73,8 +73,22 @@ get "/work/:name/materials" do
     @collection = collection
     @cid = ""
   else
-    puts @user.material_collections
     @collection = @user.material_collections[@cid] || []
+  end
+  pass
+end
+
+get "/work/:name/update_code" do
+  @cid = @params[:cid] || ""
+  if @cid.split(".", 2).size == 2
+    user, cid = @cid.split(".", 2)
+    code = XYZ::User.new(user).calculation_codes[cid]
+  end
+  if code
+    @code = code
+    @cid = ""
+  else
+    @code = @user.calculation_codes[@cid] || {}
   end
   pass
 end

@@ -27,3 +27,50 @@ wget --load-cookie cookie.txt \
      --keep-session-cookies \
      http://localhost:4567/work/gxm/home  
 ```
+
+http://www.w3school.com.cn/tiy/t.asp?f=html_optgroup
+
+```ruby
+# test for task searching
+# using in xyz-project
+Tasks = []
+
+Task = Struct.new(:name, :in, :out)
+
+def add_task(name, output = [], input = [])
+  Tasks << Task.new(name, input, output)
+end
+
+add_task("share_data", ["incar_template"], [])
+add_task("base_data", ["lattice_vector", "atomic_frac"], [])
+add_task("poscar_v0", ["POSCAR"], ["lattice_vector", "atomic_frac"])
+add_task("kpoints_v0", ["KPOINTS"], ["lattice_vector"])
+add_task("potcar_v0", ["POTCAR"], ["atomic_frac"])
+add_task("incar_v0", ["INCAR"], ["incar_template", "atomic_frac"])
+add_task("vasp_v0", ["OUTCAR"], ["INCAR", "POSCAR", "KPOINTS", "POTCAR"])
+add_task("band", ["band.png"], ["OUTCAR"])
+
+def user_select(tasks)
+  return tasks.first
+end
+
+def build_task(task)
+  tree = { "__task__": task.name }
+
+  for input in task.in
+    tasks = Tasks.select { |t|
+      t.out.include?(input)
+    }
+    t = user_select(tasks)
+    tree[input] = build_task(t)
+  end
+  return tree
+end
+
+require "json"
+
+task = Tasks.find { |t| t.name == "band" }
+tree = build_task(task)
+JSON.dump(tree, File.open("./tree.json", "w"))
+JSON.pretty_generate(tree)
+```

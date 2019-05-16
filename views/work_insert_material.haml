@@ -2,11 +2,11 @@
   Insert material
 
 %form{method: "POST", action: "/task/v1/insert_material"}
-  %table{id: "table"}
+  %table
     %tr
       %td Name
       %td
-        %input{type: "text", name: "name"}
+        %input{type: "text", name: "name", required: "required"}
     %tr
       %td Options
       %td
@@ -15,9 +15,10 @@
   %h4
     Info
     %p
-      %a{href:"https://www.runoob.com/xml/xml-tutorial.html", target:"_blank"} learning XML format...    
+      %a{href:"https://www.runoob.com/xml/xml-tutorial.html", target:"_blank"}
+        learning XML format...
     %p
-      %textarea{name:"files", cols:"80", rows:"25", style:"OVERFLOW: visible"}
+      %textarea{name: "files", cols: "100", rows: "25", style: "OVERFLOW: visible"}
         <?xml version="1.0" encoding="UTF-8"?>
         <material>
         </material>

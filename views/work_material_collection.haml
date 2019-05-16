@@ -9,10 +9,10 @@
   Material Collections
 
 %ol  
-- for cid, ids in @user.material_collections
-  %li
-    %a{href: "/work/#{@user.name}/materials?cid=#{cid}"}
-      ="#{cid} (#{ids.size})"
-    %aside
-      %a{href: "/task/v1/update_collection?cid=#{cid}"}
-        delete
+  - for cid, ids in @user.material_collections
+    %li
+      %a{href: "/work/#{@user.name}/materials?cid=#{cid}"}
+        ="#{cid} (#{ids.size})"
+      %aside
+        %a{href: "/task/v1/update_collection?cid=#{cid}"}
+          delete

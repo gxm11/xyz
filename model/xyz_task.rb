@@ -7,7 +7,7 @@ module XYZ
     module_function
 
     def add(name, &block)
-      @data[name] = { proc: block, name: name, pid: 0 }
+      @data[name] = { proc: block, name: name }
     end
 
     def run(name, *args)

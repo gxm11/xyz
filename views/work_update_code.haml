@@ -1,0 +1,40 @@
+%h4
+  Update Code
+
+%form{method: "POST", action: "/task/v1/update_code"}
+  %h5 Base
+  %table
+    %tr
+      %td
+        Name (cid)
+      %td
+        %input{type: "text", name: "cid", value: @cid, required: "required"}
+
+    %tr
+      %td Authority
+      %td
+        %select{name: "authority"}
+          %option{value: "public"} Public
+          %option{value: "private"} Private
+          %option{value: "deprecate"} Deprecate
+        
+    %tr
+      %td CPU Cores
+      %td
+        %select{name: "cores"}
+          %option{value: "1"} 1 Core
+          %option{value: "24", selected: "selected"} 24 Cores
+          
+    %tr
+      %td Description
+      %td
+        %textarea{name: "description", cols: "80", maxlength: "80", required: "required"}
+
+  %h5 Input & Output
+  %p
+    %a{href:"https://www.runoob.com/json/json-tutorial.html", target:"_blank"}
+      learning JSON format...
+  %textarea{name: "io", cols: "100", rows: "15", style: "OVERFLOW: visible", placeholder: '{"input":[], "output":[]}'}    
+
+  %h5 Entrance
+  %textarea{name: "entrance", cols: "100", rows: "15", style: "OVERFLOW: visible"}
