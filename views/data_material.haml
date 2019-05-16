@@ -5,7 +5,8 @@
     %p="(id: #{id})"
 %hr
 
-- for fn in JSON.load(@m[:info])
+- for fn in Dir.entries("./materials/#{id}/")
+  - next if fn[0] == "."
   %p
   %a{onclick: "toggle_file('#{fn}')"}
     =fn

@@ -5,9 +5,7 @@ module XYZ
     module_function
 
     def insert(name, files)
-      mid = DB_Material.insert(
-        name: name,
-      )
+      mid = DB_Material.insert(name: name)
       folder = "./materials/#{mid}"
       Dir.mkdir(folder)
       files.each_pair do |path, content|
@@ -41,12 +39,13 @@ module XYZ
   class User
     def material_collections
       prefix = "material_collection/"
-      iterate_prefix(prefix) { |k, v| v }
+      getdata_by(prefix)
     end
 
     def material_collection_update(cid, mids)
       prefix = "material_collection/"
       if mids
+        mids = mids.collect { |mid| mid.to_i }
         save_data(prefix + cid, mids)
       else
         save_data(prefix + cid, nil)
@@ -66,6 +65,7 @@ module XYZ
     if name != ""
       files = Crack::XML.parse(params["files"])["material"] || {}
       mid = Material.insert(name, files)
+      Material.update(mid, author: user)
       if params["private"] == "private"
         Material.update(mid, private: true)
       end

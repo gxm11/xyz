@@ -73,6 +73,7 @@ get "/work/:name/materials" do
     @collection = collection
     @cid = ""
   else
+    puts @user.material_collections
     @collection = @user.material_collections[@cid] || []
   end
   pass

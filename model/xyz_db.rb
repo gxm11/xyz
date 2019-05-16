@@ -19,7 +19,8 @@ module XYZ
       primary_key :id
       string :name, null: false
       string :author
-      bool :pravite, default: false
+      bool :private, default: false
+      timestamp :create_at, default: Sequel::CURRENT_TIMESTAMP
     end
   end
 

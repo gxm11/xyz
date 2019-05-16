@@ -71,15 +71,15 @@ module XYZ
       DB_PS[pskey(key)]
     end
 
-    def iterate_prefix(prefix)
+    def getdata_by(prefix)
       _prefix = pskey(prefix).to_s
       len = _prefix.size
       keys = DB_PS.keys.select { |key|
         key[0, len] == _prefix
       }
-      keys.each { |key|
-        yield key, DB_PS[key]
-      }
+      values = keys.collect { |k| DB_PS[k] }
+      short_keys = keys.collect { |k| k[len..-1] }
+      Hash[short_keys.zip(values)]
     end
 
     def db_init

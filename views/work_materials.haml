@@ -13,8 +13,8 @@
       %th{width: "1%"}
       %th mid
       %th name
-      %th user
-      %th info
+      %th author
+      %th create_at
     - for material in @user.materials do
       - id = material[:id]
       - check = @collection.include?(id)
@@ -23,8 +23,8 @@
           %input{type: "checkbox", name: "mid[]", value: id, id: id, checked: check}
         %td=material[:id]
         %td=material[:name]
-        %td=material[:state]
-        %td=material[:info]
+        %td=material[:author]
+        %td=material[:create_at]
 
 :javascript
   function toggle_checkbox(id) {

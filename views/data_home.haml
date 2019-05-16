@@ -4,12 +4,13 @@
   %tr
     %th mid
     %th name
-    %th user
+    %th author
+    %th create_at
   - for material in @materials
     %tr
       %td{width: "1%", style: "text-align: center"}=material[:id]
-      %td
+      %td{style: "text-align: center"}
         %a{href: "/data/#{material[:id]}/#{material[:name]}"}
           =material[:name]
-      %td=material[:state]
-
+      %td{style: "text-align: center"}=material[:author]
+      %td{style: "text-align: center"}=material[:create_at]
