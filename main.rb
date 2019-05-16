@@ -133,7 +133,7 @@ end
 # -----------------------------------------------
 # file
 # -----------------------------------------------
-get "/file/materials/*" do
+get "/file/material/*" do
   fn = params["splat"].first
-  send_file "./materials/#{fn}"
+  send_file "./material/#{fn}"
 end

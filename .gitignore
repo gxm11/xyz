@@ -49,4 +49,4 @@ bower.json
 node_modules/
 
 # Ignore xyz materials
-materials/*/
+material/*/

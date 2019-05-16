@@ -6,7 +6,7 @@ module XYZ
 
     def insert(name, files)
       mid = DB_Material.insert(name: name)
-      folder = "./materials/#{mid}"
+      folder = "./material/#{mid}"
       Dir.mkdir(folder)
       files.each_pair do |path, content|
         next if !content

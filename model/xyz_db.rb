@@ -107,6 +107,9 @@ module XYZ
     end
 
     def db_init
+      Dir.mkdir("./user/#{@name}")
+      Dir.mkdir("./user/#{@name}/share")
+      Dir.mkdir("./user/#{@name}/code")
     end
   end
 end

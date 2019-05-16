@@ -5,20 +5,20 @@
     %p="(id: #{id})"
 %hr
 
-- for fn in Dir.entries("./materials/#{id}/")
+- for fn in Dir.entries("./material/#{id}/")
   - next if fn[0] == "."
   %p
   %a{onclick: "toggle_file('#{fn}')"}
     =fn
   %aside
-    %a{href: "/file/materials/#{id}/#{fn}"} download
+    %a{href: "/file/material/#{id}/#{fn}"} download
   %div{id: fn, style: "display: none"}
     - if ["png", "jpeg", "jpg", "gif"].include?(fn.split(".").last.downcase)
       %p
-        %img{src: "/file/materials/#{id}/#{fn}"}
+        %img{src: "/file/material/#{id}/#{fn}"}
     - else
       %pre
-        =File.read("materials/#{id}/#{fn}")
+        =File.read("material/#{id}/#{fn}")
 
 :javascript
   function toggle_file(fn) {
