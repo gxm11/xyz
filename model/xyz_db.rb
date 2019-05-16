@@ -67,4 +67,46 @@ module XYZ
   DB_PS = ps
   DB_User = db[:user]
   DB_Material = db[:material]
+  # ---------------------------------------------
+  # User
+  # ---------------------------------------------
+  # Each user has private or shared data
+  # ---------------------------------------------
+  class User
+    attr_reader :name
+
+    def initialize(name)
+      @name = name
+    end
+
+    def pskey(key)
+      "#{name}/#{key}".to_sym
+    end
+
+    def save_data(key, value)
+      if value == nil
+        DB_PS.delete(pskey(key))
+      else
+        DB_PS[pskey(key)] = value
+      end
+    end
+
+    def load_data(key)
+      DB_PS[pskey(key)]
+    end
+
+    def getdata_by(prefix)
+      _prefix = pskey(prefix).to_s
+      len = _prefix.size
+      keys = DB_PS.keys.select { |key|
+        key[0, len] == _prefix
+      }
+      values = keys.collect { |k| DB_PS[k] }
+      short_keys = keys.collect { |k| k[len..-1] }
+      Hash[short_keys.zip(values)]
+    end
+
+    def db_init
+    end
+  end
 end
