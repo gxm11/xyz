@@ -4,18 +4,16 @@ module XYZ
   module Material
     module_function
 
-    def insert(name, info)
+    def insert(name, files)
       mid = DB_Material.insert(
         name: name,
-        state: "",
-        info: JSON.dump(info.keys),
       )
       folder = "./materials/#{mid}"
       Dir.mkdir(folder)
-      info.each_pair do |key, value|
-        next if !value
-        value = value.strip.gsub("\r\n", "\n")
-        File.binwrite("#{folder}/#{key}", value)
+      files.each_pair do |path, content|
+        next if !content
+        content = content.strip.gsub("\r\n", "\n")
+        File.binwrite("#{folder}/#{path}", content)
       end
       return mid
     end
@@ -41,27 +39,17 @@ module XYZ
   # user
   # ---------------------------------------------
   class User
-    alias _in_material_db_init db_init
-
-    def db_init
-      _in_material_db_init
-      key = pskey "material_collections"
-      DB_PS[key] = {}
-    end
-
     def material_collections
-      key = pskey "material_collections"
-      DB_PS[key]
+      prefix = "material_collection/"
+      iterate_prefix(prefix) { |k, v| v }
     end
 
     def material_collection_update(cid, mids)
-      key = pskey "material_collections"
-      DB_PS.transaction do |db|
-        if mids
-          db[key][cid] = mids.collect { |id| id.to_i }
-        else
-          db[key].delete(cid)
-        end
+      prefix = "material_collection/"
+      if mids
+        save_data(prefix + cid, mids)
+      else
+        save_data(prefix + cid, nil)
       end
     end
 
@@ -76,10 +64,10 @@ module XYZ
   Task.add(:insert_material) do |user, params|
     name = params["name"]
     if name != ""
-      info = Crack::XML.parse(params["info"])["material"] || {}
-      mid = Material.insert(name, info)
-      if params["pravite"] == "pravite"
-        Material.update(mid, state: user)
+      files = Crack::XML.parse(params["files"])["material"] || {}
+      mid = Material.insert(name, files)
+      if params["private"] == "private"
+        Material.update(mid, private: true)
       end
     end
   end

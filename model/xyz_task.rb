@@ -16,18 +16,6 @@ module XYZ
       end
     end
 
-    def run_bg(name, *args)
-      if @data.include?(name)
-        pid = @data[name][:proc].call(*args)
-        @data[name][:pid] = pid
-      end
-    end
-
-    def kill_bg(name)
-      pid = @data[name][:pid]
-      Process.kill(9, pid)
-    end
-
     attr_reader :data
   end
 end

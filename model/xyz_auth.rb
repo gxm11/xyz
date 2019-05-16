@@ -23,7 +23,7 @@ module XYZ
         DB_PS.transaction do |db|
           if db[:auth_active_key].include?(key)
             db[:auth_active_key].delete(key)
-            uid = DB_User.insert(name: name, passwd: passwd, state: "", level: 0)
+            uid = DB_User.insert(name: name, passwd: passwd)
           end
         end
         if uid
@@ -55,8 +55,31 @@ module XYZ
       @name = name
     end
 
-    def pskey(string)
-      "#{@name}-#{string}".to_sym
+    def pskey(key)
+      "#{name}/#{key}".to_sym
+    end
+
+    def save_data(key, value)
+      if value == nil
+        DB_PS.delete(pskey(key))
+      else
+        DB_PS[pskey(key)] = value
+      end
+    end
+
+    def load_data(key)
+      DB_PS[pskey(key)]
+    end
+
+    def iterate_prefix(prefix)
+      _prefix = pskey(prefix).to_s
+      len = _prefix.size
+      keys = DB_PS.keys.select { |key|
+        key[0, len] == _prefix
+      }
+      keys.each { |key|
+        yield key, DB_PS[key]
+      }
     end
 
     def db_init
