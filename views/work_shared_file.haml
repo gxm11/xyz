@@ -1,0 +1,27 @@
+
+%form{method: "POST", action: "/task/v1/update_shared_file", enctype: "multipart/form-data"}
+  %fieldset
+    %legend Upload      
+    %input{type: "file", name: "file"}
+    %input{type: "submit", value: "Upload File"}
+
+%hr
+
+- for fn in Dir.entries("./user/#{@user.name}/share/")
+  - next if fn[0] == "."
+  %p
+  %a{onclick: "toggle_file('#{fn}')"}
+    =fn
+  %aside  
+    %a{href: "/file/share/user/#{fn}"} download
+    %a{href: "/task/v1/delete_shared_file?file=#{fn}"} delete
+    
+:javascript
+  function toggle_file(fn) {
+    var div = document.getElementById(fn)
+    if (div.style.display == "none") {
+      div.style.display = "block"
+    } else {
+      div.style.display = "none"
+    }
+  }

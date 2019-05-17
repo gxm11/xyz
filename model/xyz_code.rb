@@ -7,4 +7,10 @@ module XYZ
       getdata_by(prefix)
     end
   end
+
+  Task.add(:update_shared_file) do |user, params|
+    tempfile = params["file"]["tempfile"] 
+    filename = params["file"]["filename"] 
+    FileUtils.cp(tempfile.path, "./user/#{user}/share/#{filename}")
+  end
 end

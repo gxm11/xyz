@@ -22,7 +22,7 @@ get "/login" do
 end
 
 post "/login_check" do
-  name = XYZ::Task.run(:login_check, @params)
+  name = XYZ::Task.run(:login_check, params)
   if name
     key = name + "@" + request.ip
     session[:auth] = XYZ::Auth.set_auth(key)
@@ -46,12 +46,12 @@ get "/work" do
 end
 
 before "/work/:name/*" do
-  key_auth = @params[:name] + "@" + request.ip
+  key_auth = params[:name] + "@" + request.ip
   key = XYZ::Auth.auth_key(session[:auth])
   if key != key_auth
     redirect "/login"
   else
-    @user = XYZ::User.new(@params[:name])
+    @user = XYZ::User.new(params[:name])
   end
 end
 
@@ -64,7 +64,7 @@ get "/work/admin/active_keys" do
 end
 
 get "/work/:name/materials" do
-  @cid = @params[:cid] || ""
+  @cid = params[:cid] || ""
   if @cid.split(".", 2).size == 2
     user, cid = @cid.split(".", 2)
     collection = XYZ::User.new(user).material_collections[cid]
@@ -79,7 +79,7 @@ get "/work/:name/materials" do
 end
 
 get "/work/:name/update_code" do
-  @cid = @params[:cid] || ""
+  @cid = params[:cid] || ""
   if @cid.split(".", 2).size == 2
     user, cid = @cid.split(".", 2)
     code = XYZ::User.new(user).calculation_codes[cid]
@@ -97,7 +97,7 @@ end
 # render with template
 # -----------------------------------------------
 get "/work/:name/:work" do
-  haml "work_#{@params[:work]}".to_sym
+  haml "work_#{params[:work]}".to_sym
 end
 
 # -----------------------------------------------
@@ -107,12 +107,12 @@ post "/task/:v/:task" do
   key = XYZ::Auth.auth_key(session[:auth])
   if key
     user = key.split("@").first
-    task = @params[:task].to_sym
-    result = XYZ::Task.run(task, user, @params)
+    task = params[:task].to_sym
+    result = XYZ::Task.run(task, user, params)
     # -------------------------------------------
     # produce result
     # -------------------------------------------
-    case @params[:v]
+    case params[:v]
     when "v1" # v1: Back to referrer
       redirect request.referrer
     end
@@ -125,8 +125,8 @@ get "/task/v1/:task" do
   key = XYZ::Auth.auth_key(session[:auth])
   if key
     user = key.split("@").first
-    task = @params[:task].to_sym
-    XYZ::Task.run(task, user, @params)
+    task = params[:task].to_sym
+    XYZ::Task.run(task, user, params)
     redirect request.referrer
   end
 end
@@ -140,7 +140,7 @@ get "/data" do
 end
 
 get "/data/:mid/:name" do
-  @m = XYZ::Material.material(@params[:mid])
+  @m = XYZ::Material.material(params[:mid])
   haml :data_material
 end
 
@@ -150,4 +150,10 @@ end
 get "/file/material/*" do
   fn = params["splat"].first
   send_file "./material/#{fn}"
+end
+
+get "/file/share/:user/*" do
+  user = params[:user]
+  fn = params["splat"].first
+  send_file "./user/#{user}/share/#{fn}"
 end
