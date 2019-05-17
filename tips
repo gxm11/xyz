@@ -74,3 +74,6 @@ tree = build_task(task)
 JSON.dump(tree, File.open("./tree.json", "w"))
 JSON.pretty_generate(tree)
 ```
+```
+onclick:"return confirm('Are You Sure?')"
+```
