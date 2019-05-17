@@ -35,7 +35,7 @@ module XYZ
       string :input
       string :output
       text :entrance
-      timestamp :last_update_time
+      timestamp :latest_update_at
     end
   end
 
