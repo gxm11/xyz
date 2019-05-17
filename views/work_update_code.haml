@@ -5,10 +5,13 @@
   %h5 Base
   %table
     %tr
-      %td
-        Name (cid)
+      %td Name (cid)
       %td
         %input{type: "text", name: "cid", value: @cid, required: "required"}
+      %td
+        Input & Output
+        %a{href:"https://www.json2yaml.com/", target:"_blank"}
+          learning JSON & YAML format...
 
     %tr
       %td Authority
@@ -17,24 +20,21 @@
           %option{value: "public"} Public
           %option{value: "private"} Private
           %option{value: "deprecate"} Deprecate
-        
+      %td{rowspan: 4}
+        %textarea{name: "io", cols: "40", rows: "10", style: "OVERFLOW: visible",
+          placeholder: "input:\n  - INCAR\n  - POSCAR\n  - [KPOINTS, KPOINTS.band]\n  - POTCAR\noutput:\n  - OUTCAR"}
+
     %tr
       %td CPU Cores
       %td
         %select{name: "cores"}
           %option{value: "1"} 1 Core
           %option{value: "24", selected: "selected"} 24 Cores
-          
+
     %tr
       %td Description
       %td
-        %textarea{name: "description", cols: "80", maxlength: "80", required: "required"}
-
-  %h5 Input & Output
-  %p
-    %a{href:"https://www.runoob.com/json/json-tutorial.html", target:"_blank"}
-      learning JSON format...
-  %textarea{name: "io", cols: "100", rows: "15", style: "OVERFLOW: visible", placeholder: '{"input":[], "output":[]}'}    
+        %textarea{name: "description", cols: "25", rows: "4", required: "required"}
 
   %h5 Entrance
   %textarea{name: "entrance", cols: "100", rows: "15", style: "OVERFLOW: visible"}
