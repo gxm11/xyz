@@ -53,7 +53,9 @@ module XYZ
     end
 
     def materials
-      ms = DB_Material.order(:id).all
+      ms = DB_Material.where(
+        Sequel.or(private: false, author: @name)
+      ).order(:id).all
     end
   end
 
