@@ -153,7 +153,7 @@ get "/file/material/*" do
 end
 
 get "/file/share/:user/*" do
-  user = params[:user]
+  user = params["user"]
   fn = params["splat"].first
   send_file "./user/#{user}/share/#{fn}"
 end

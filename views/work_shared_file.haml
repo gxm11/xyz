@@ -10,17 +10,24 @@
 - for fn in Dir.entries("./user/#{@user.name}/share/")
   - next if fn[0] == "."
   %p
-  %a{onclick: "toggle_file('#{fn}')"}
+  %a{onclick: "toggle_name('#{fn}')"}
     =fn
-  %aside  
-    %a{href: "/file/share/user/#{fn}"} download
-    %a{href: "/task/v1/delete_shared_file?file=#{fn}"} delete
+  %div{id: fn, style: "display: none"}    
+    %form{method: "POST", action: "/task/v1/rename_shared_file"}
+      %input{type: "text", name: "new", value: fn}
+      %input{type: "hidden", name: "old", value: fn}
     
+  %aside
+    %a{href: "/file/share/#{@user.name}/#{fn}"} download
+    %a{href: "/task/v1/delete_shared_file?file=#{fn}"} delete
+
+  
+
 :javascript
-  function toggle_file(fn) {
+  function toggle_name(fn) {
     var div = document.getElementById(fn)
     if (div.style.display == "none") {
-      div.style.display = "block"
+      div.style.display = "inline-block"      
     } else {
       div.style.display = "none"
     }

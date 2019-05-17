@@ -1,4 +1,7 @@
 module XYZ
+  # ---------------------------------------------
+  # Database
+  # ---------------------------------------------
   db = Sequel.connect("sqlite://./db/xyz.sqlite3")
   # save user data / password
   if !db.table_exists?(:user)
@@ -107,9 +110,9 @@ module XYZ
     end
 
     def db_init
-      Dir.mkdir("./user/#{@name}")
-      Dir.mkdir("./user/#{@name}/share")
-      Dir.mkdir("./user/#{@name}/code")
+      FileUtils.mkdir("./user/#{@name}", mode: 0755)
+      FileUtils.mkdir("./user/#{@name}/share", mode: 0755)
+      FileUtils.mkdir("./user/#{@name}/code", mode: 0755)
     end
   end
 end
