@@ -1,6 +1,8 @@
 %h4
   Update Code
 
+- params = @code["params"] || {}
+
 %form{method: "POST", action: "/task/v1/update_code"}
   %h5 Base
   %table
@@ -8,33 +10,47 @@
       %td Name (cid)
       %td
         %input{type: "text", name: "cid", value: @cid, required: "required"}
-      %td
-        Input & Output
-        %a{href:"https://www.json2yaml.com/", target:"_blank"}
-          learning JSON & YAML format...
+      %td Description
 
     %tr
-      %td Authority
-      %td
-        %select{name: "authority"}
-          %option{value: "public"} Public
-          %option{value: "private"} Private
-          %option{value: "deprecate"} Deprecate
+      %td Option
+      %td        
+        - checked = !!params["enable"]
+        %input{type: "checkbox", name: "enable", value: "enable", checked: checked} Enable
       %td{rowspan: 4}
-        %textarea{name: "io", cols: "40", rows: "10", style: "OVERFLOW: visible",
-          placeholder: "input:\n  - INCAR\n  - POSCAR\n  - [KPOINTS, KPOINTS.band]\n  - POTCAR\noutput:\n  - OUTCAR"}
-
+        %textarea{name: "description", cols: "40", rows: "4", required: "required"}
+          = params["description"] || ""
     %tr
       %td CPU Cores
       %td
-        %select{name: "cores"}
-          %option{value: "1"} 1 Core
-          %option{value: "24", selected: "selected"} 24 Cores
+        %select{name: "cores"}        
+          %option{value: "1", selected: params["cores"] == "1"} 1 Core
+          %option{value: "24", selected: params["cores"] == "24"} 24 Cores
 
+  %h5 Run
+
+  %table
     %tr
-      %td Description
+      %td{colspan: 2} Input
+    %tr
+      %td{colspan: 2}
+        %textarea{name: "input", cols: 80, rows: 6, style: "OVERFLOW: visible"}
+          = params["input"] || ""
+    %tr
+      %td{colspan: 2} Entrance
+    %tr
+      %td{colspan: 2}
+        %textarea{name: "entrance", cols: 80, rows: 6, style: "OVERFLOW: visible"}      
+          = params["entrance"] || ""
+    %tr
+      %td Output
+      %td Property
+    %tr 
       %td
-        %textarea{name: "description", cols: "25", rows: "4", required: "required"}
+        %textarea{name: "output", cols: 40, rows: 6, style: "OVERFLOW: visible"}
+          = params["output"] || ""
+      %td
+        %textarea{name: "property", cols: 40, rows: 6, style: "OVERFLOW: visible"}
+          = params["property"] || ""
 
-  %h5 Entrance
-  %textarea{name: "entrance", cols: "100", rows: "15", style: "OVERFLOW: visible"}
+  %input{type: "submit", value: "Submit Code"}

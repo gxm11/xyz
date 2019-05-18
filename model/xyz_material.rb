@@ -10,7 +10,7 @@ module XYZ
       FileUtils.mkdir(folder, mode: 0755)
       files.each_pair do |path, content|
         next if !content
-        content = content.strip.gsub("\r\n", "\n")
+        content = content.strip.gsub(/\s*\n/, "\n")
         File.binwrite("#{folder}/#{path}", content)
       end
       return mid

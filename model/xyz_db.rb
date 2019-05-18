@@ -37,8 +37,7 @@ module XYZ
       bool :enable, default: false
       string :input
       string :output
-      text :entrance
-      timestamp :latest_update_at
+      timestamp :update_at, default: Sequel::CURRENT_TIMESTAMP
     end
   end
 
@@ -70,6 +69,7 @@ module XYZ
   DB_PS = ps
   DB_User = db[:user]
   DB_Material = db[:material]
+  DB_Code = db[:code]
   # ---------------------------------------------
   # User
   # ---------------------------------------------

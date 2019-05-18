@@ -6,6 +6,27 @@ module XYZ
       prefix = "calculation_code/"
       getdata_by(prefix)
     end
+
+    def calculation_code_update(cid, code)
+      prefix = "calculation_code/"
+      if getdata_by(prefix + cid).empty?
+        DB_Code.insert(
+          name: cid,
+          author: @name,
+          enable: !!code["enable"],
+          input: JSON.dump(code["input"]),
+          output: JSON.dump(code["output"]),
+        )
+      else
+        DB_Code.where(name: cid, author: @name).update(
+          enable: !!code["enable"],
+          input: JSON.dump(code["input"]),
+          output: JSON.dump(code["output"]),
+          update_at: Sequel::CURRENT_TIMESTAMP,
+        )
+      end
+      save_data(prefix + cid, code)
+    end
   end
 
   Task.add(:update_shared_file) do |user, params|
@@ -23,5 +44,45 @@ module XYZ
     old_fn = "./user/#{user}/share/" + params["old"]
     new_fn = "./user/#{user}/share/" + params["new"]
     FileUtils.mv(old_fn, new_fn)
+  end
+
+  Task.add(:update_code) do |user, params|
+    cid = params["cid"]
+    if cid != ""
+      code = {}
+      # - cid - #
+      code["cid"] = cid
+      # - description - #
+      code["description"] = params["description"].strip.gsub(/\s*\n/, "\n")
+      # - enable - #
+      code["enable"] = !!params["enable"]
+      # - cores - #
+      code["cores"] = params["cores"].to_i
+      # - input - #
+      content = params["input"].strip.gsub(/\s*\n/, "\n")
+      content = content.split("\n").collect { |line| line.split(";") }
+      code["input"] = content
+      # - entrance - #
+      content = params["entrance"].strip.gsub(/\s*\n/, "\n")
+      code["entrance"] = content
+      # - output - #
+      content = params["output"].strip.gsub(/\s*\n/, "\n")
+      content = content.split("\n")
+      code["output"] = content
+      # - property - #
+      content = params["output"].strip.gsub(/\s*\n/, "\n")
+      content = content.split("\n")
+      code["property"] = {}
+      content.each do |line|
+        ary = line.strip.split(/\s+/, 2)
+        name = ary[0]
+        type = ary[1] || "string"
+        code["property"][name] = type
+      end
+      # - params - #
+      code["params"] = params
+      # -- update -- #
+      User.new(user).calculation_code_update(cid, code)
+    end
   end
 end
