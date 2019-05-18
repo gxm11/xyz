@@ -12,7 +12,7 @@
     =fn
   %aside
     %a{href: "/file/material/#{id}/#{fn}"} download
-    
+
   %div{id: fn, style: "display: none"}
     - if ["png", "jpeg", "jpg", "gif"].include?(fn.split(".").last.downcase)
       %p

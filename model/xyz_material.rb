@@ -7,7 +7,7 @@ module XYZ
     def insert(name, files)
       mid = DB_Material.insert(name: name)
       folder = "./material/#{mid}"
-      mkdir(folder, mode: 0700)
+      FileUtils.mkdir(folder, mode: 0755)
       files.each_pair do |path, content|
         next if !content
         content = content.strip.gsub("\r\n", "\n")
