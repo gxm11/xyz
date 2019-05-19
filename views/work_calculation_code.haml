@@ -1,7 +1,7 @@
 %p
   %code Use 'user.cname' to copy a code.
 
-%form{method: "get", action: "/work/#{@user.name}/update_code"}
+%form{method: "GET", action: "/work/#{@user.name}/update_code"}
   Create Code:
   %input{type: "text", name: "cname"}
 

@@ -9,10 +9,12 @@
       %a{href: "/work/#{@user.name}/calculation_code"} Calculation Code
     %li
       %a{href: "/work/#{@user.name}/shared_file"} Shared File
+    %li
+      %a{href: "/work/#{@user.name}/task_trees"} Task Tree
 
 %h4
   Tasks:
-  %a{href: "/work/#{@user.name}/current_tree"} Current Tree
+  
 
 - if @user.name == "admin"
   %h4

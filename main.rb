@@ -93,9 +93,9 @@ get "/work/:name/update_code" do
   pass
 end
 
-get "/work/:name/current_tree" do
-  @user.current_tree_update(params)
-  @current_tree = @user.current_tree
+get "/work/:name/build_tree" do
+  @tname = params["tname"] || ""
+  @tree = @user.task_trees[@tname]
   pass
 end
 

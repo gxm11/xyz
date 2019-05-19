@@ -1,0 +1,14 @@
+%p
+  %code User 'user.tname' to copy a task tree.
+
+%form{method: "GET", action: "/work/#{@user.name}/build_tree"}
+  Create Task Tree:
+  %input{type: "text", name: "tname"}
+  
+%h4 Task Trees 
+
+%ol
+  - for tname, tree in @user.task_trees
+    %li
+      %a{href: "/work/#{@user.name}/build_tree?tname=#{tname}"}
+        =tname

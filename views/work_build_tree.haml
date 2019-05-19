@@ -1,5 +1,16 @@
 %h4
-  Build Tree
 
-%a{href: "/task/v1/tree_refresh"} Tree Refresh
+%form{method: "GET", action: "/task/v1/task_tree_insert"}
+  %p
+    Name: 
+    %input{type: "text", name: "tname", value: @tname}
+  %p
+    Main Task:
+    %select{name: "cid"}
+      - for cid, code in XYZ::Tree::Codes
+        %option{value: cid, selected: @tree && @tree.cid == cid}
+          =code.name
+  %input{type: "submit", value: "Insert Tree"}
 
+- if @tree
+  %p Build Tree

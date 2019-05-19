@@ -29,6 +29,10 @@ module XYZ
       @data = create_node(cid)
     end
 
+    def cid
+      @data[:__cid__]
+    end
+
     def create_node(cid)
       { __cid__: cid, __end__: Ends.include?(cid) }
     end
@@ -103,6 +107,8 @@ module XYZ
     Tree.refresh_database
   end
 
+  Tree.refresh_database
+
   # -- user -- #
   class User
     def task_trees
@@ -110,34 +116,34 @@ module XYZ
       getdata_by(prefix)
     end
 
-    def task_tree_insert(tid, cid)
+    def task_tree_insert(tname, cid)
       prefix = "task_tree/"
       tree = Tree.new(cid)
-      save_data(prefix + tid, tree)
+      save_data(prefix + tname, tree)
     end
 
-    def task_tree_update(tid, answer_hash)
+    def task_tree_update(tname, answer_hash)
       prefix = "task_tree/"
-      tree = load_data(prefix + tid)
+      tree = load_data(prefix + tname)
       return if !tree
       tree.update(answer_hash)
-      save_data(prefix + tid, tree)
+      save_data(prefix + tname, tree)
     end
 
-    def task_tree_delete(tid)
+    def task_tree_delete(tname)
       prefix = "task_tree/"
-      save_data(prefix + tid, nil)
+      save_data(prefix + tname, nil)
     end
   end
 
   Task.add(:task_tree_insert) do |user, params|
-    tid = params["tid"]
+    tname = params["tname"]
     cid = params["cid"].to_i
-    User.new(user).task_tree_insert(tid, cid)
+    User.new(user).task_tree_insert(tname, cid)
   end
 
   Task.add(:task_tree_delete) do |user, params|
-    tid = params["tid"]
-    User.new(user).task_tree_delete(tid)
+    tname = params["tname"]
+    User.new(user).task_tree_delete(tname)
   end
 end
