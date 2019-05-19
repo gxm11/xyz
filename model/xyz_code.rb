@@ -85,4 +85,14 @@ module XYZ
       User.new(user).calculation_code_update(cid, code)
     end
   end
+
+  Task.add(:update_code_test) do |name, output, input|
+    DB_Code.insert(
+      name: name,
+      author: "test",
+      enable: true,
+      input: JSON.dump(input),
+      output: JSON.dump(output),
+    )
+  end
 end

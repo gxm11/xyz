@@ -10,6 +10,10 @@
     %li
       %a{href: "/work/#{@user.name}/shared_file"} Shared File
 
+%h4
+  Tasks:
+  %a{href: "/work/#{@user.name}/current_tree"} Current Tree
+
 - if @user.name == "admin"
   %h4
     Admin:
