@@ -44,7 +44,7 @@ module XYZ
 
     def material_collection_update(cl_name, mids)
       prefix = "material_collection/"
-      save_data(prefix + cl_name, nil)
+      save_data(prefix + cl_name, mids)
     end
 
     def materials
