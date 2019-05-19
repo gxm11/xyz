@@ -71,11 +71,16 @@ module XYZ
       }
     end
 
+    def qkey(cid, input)
+      cid.to_s + "/" + input
+    end
+
     def question
       q = {}
       iteration_data { |i, data|
         if data[i].is_a?(Array)
-          q.update([data[:__cid__], i] => data[i])
+          key = qkey(data[:__cid__], i)
+          q.update(key => data[i])
         end
       }
       q
@@ -86,13 +91,14 @@ module XYZ
       q = self.question
       answer.each_pair { |key, value|
         if !q[key] || !q[key].include?(value)
-          return
+          answer.delete(key)
         end
       }
       # update data
       iteration_data { |i, data|
         if data[i].is_a?(Array)
-          a = answer[[data[:__cid__], i]]
+          key = qkey(data[:__cid__], i)
+          a = answer[key]
           if a
             data[i] = create_node(a)
           end
@@ -119,6 +125,7 @@ module XYZ
     def task_tree_insert(tname, cid)
       prefix = "task_tree/"
       tree = Tree.new(cid)
+      tree.expand!
       save_data(prefix + tname, tree)
     end
 
@@ -126,6 +133,7 @@ module XYZ
       prefix = "task_tree/"
       tree = load_data(prefix + tname)
       return if !tree
+      tree.expand!
       tree.update(answer_hash)
       save_data(prefix + tname, tree)
     end
@@ -145,5 +153,17 @@ module XYZ
   Task.add(:task_tree_delete) do |user, params|
     tname = params["tname"]
     User.new(user).task_tree_delete(tname)
+  end
+
+  Task.add(:task_tree_update) do |user, params|
+    tname = params["tname"]
+    answer_hash = {}
+    puts params
+    params.each_pair do |k, v|
+      if v =~ /^\d+$/
+        answer_hash[k] = v.to_i
+      end
+    end
+    User.new(user).task_tree_update(tname, answer_hash)
   end
 end

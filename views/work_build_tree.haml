@@ -13,4 +13,17 @@
   %input{type: "submit", value: "Insert Tree"}
 
 - if @tree
-  %p Build Tree
+  %form{method: "POST", action: "/task/v1/task_tree_update?tname=#{@tname}"}
+    %pre=JSON.pretty_generate @tree.data
+    question
+    - for key, values in @tree.question
+      - cid, input = key.split("/", 2)
+      - c = XYZ::Tree::Codes[cid.to_i]
+      %p
+        =c.name
+        =input
+      %select{name: key}
+        - for i in values
+          %option{value: i}
+            =XYZ::Tree::Codes[i].name
+    %input{type: "submit", value: "update"}

@@ -8,7 +8,6 @@ require "sequel"
 
 module XYZ
   class Tree; end
-  class User; end
 end
 
 require "./model/xyz_db"
