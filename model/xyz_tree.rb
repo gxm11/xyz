@@ -101,14 +101,6 @@ module XYZ
 
   Task.add(:tree_refresh) do
     Tree.refresh_database
-    # tree = Tree.new(8)
-    # tree.expand!
-    # p tree.data
-    # p tree.question
-    # answer = { [8, "OUTCAR"] => 7 }
-    # tree.update(answer)
-    # p tree.data
-    # p tree.question
   end
 
   # -- user -- #
@@ -136,13 +128,6 @@ module XYZ
       prefix = "task_tree/"
       save_data(prefix + tid, nil)
     end
-
-    # def task_tree_drop(tid, cid)
-    #   prefix = "task_tree/"
-    #   tree = load_data(prefix + tid)
-    #   tree.drop(cid)
-    #   save_data(prefix + tid, tree)
-    # end
   end
 
   Task.add(:task_tree_insert) do |user, params|

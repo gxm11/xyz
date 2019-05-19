@@ -7,25 +7,25 @@ module XYZ
       getdata_by(prefix)
     end
 
-    def calculation_code_update(cid, code)
+    def calculation_code_update(cname, code)
       prefix = "calculation_code/"
-      if getdata_by(prefix + cid).empty?
+      if getdata_by(prefix + cname).empty?
         DB_Code.insert(
-          name: cid,
+          name: cname,
           author: @name,
           enable: !!code["enable"],
           input: JSON.dump(code["input"]),
           output: JSON.dump(code["output"]),
         )
       else
-        DB_Code.where(name: cid, author: @name).update(
+        DB_Code.where(name: cname, author: @name).update(
           enable: !!code["enable"],
           input: JSON.dump(code["input"]),
           output: JSON.dump(code["output"]),
           update_at: Sequel::CURRENT_TIMESTAMP,
         )
       end
-      save_data(prefix + cid, code)
+      save_data(prefix + cname, code)
     end
   end
 
@@ -47,11 +47,11 @@ module XYZ
   end
 
   Task.add(:update_code) do |user, params|
-    cid = params["cid"]
-    if cid != ""
+    cname = params["cname"]
+    if cname != ""
       code = {}
-      # - cid - #
-      code["cid"] = cid
+      # - cname - #
+      code["cname"] = cname
       # - description - #
       code["description"] = params["description"].strip.gsub(/\s*\n/, "\n")
       # - enable - #
@@ -82,7 +82,7 @@ module XYZ
       # - params - #
       code["params"] = params
       # -- update -- #
-      User.new(user).calculation_code_update(cid, code)
+      User.new(user).calculation_code_update(cname, code)
     end
   end
 

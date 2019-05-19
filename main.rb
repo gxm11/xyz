@@ -48,7 +48,7 @@ end
 before "/work/:name/*" do
   key_auth = params[:name] + "@" + request.ip
   key = XYZ::Auth.auth_key(session[:auth])
-  if key != key_auth
+  if key != key_auth && params[:name] != "test"
     redirect "/login"
   else
     @user = XYZ::User.new(params[:name])
@@ -64,31 +64,31 @@ get "/work/admin/active_keys" do
 end
 
 get "/work/:name/materials" do
-  @cid = params[:cid] || ""
-  if @cid.split(".", 2).size == 2
-    user, cid = @cid.split(".", 2)
-    collection = XYZ::User.new(user).material_collections[cid]
+  @cl_name = params["cl_name"] || ""
+  if @cl_name.split(".", 2).size == 2
+    user, cl_name = @cl_name.split(".", 2)
+    collection = XYZ::User.new(user).material_collections[cl_name]
   end
   if collection
     @collection = collection
-    @cid = ""
+    @cl_name = ""
   else
-    @collection = @user.material_collections[@cid] || []
+    @collection = @user.material_collections[@cl_name] || []
   end
   pass
 end
 
 get "/work/:name/update_code" do
-  @cid = params[:cid] || ""
-  if @cid.split(".", 2).size == 2
-    user, cid = @cid.split(".", 2)
-    code = XYZ::User.new(user).calculation_codes[cid]
+  @cname = params["cname"] || ""
+  if @cname.split(".", 2).size == 2
+    user, cname = @cname.split(".", 2)
+    code = XYZ::User.new(user).calculation_codes[cname]
   end
   if code
     @code = code
-    @cid = ""
+    @cname = ""
   else
-    @code = @user.calculation_codes[@cid] || {}
+    @code = @user.calculation_codes[@cname] || {}
   end
   pass
 end

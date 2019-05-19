@@ -42,14 +42,9 @@ module XYZ
       getdata_by(prefix)
     end
 
-    def material_collection_update(cid, mids)
+    def material_collection_update(cl_name, mids)
       prefix = "material_collection/"
-      if mids
-        mids = mids.collect { |mid| mid.to_i }
-        save_data(prefix + cid, mids)
-      else
-        save_data(prefix + cid, nil)
-      end
+      save_data(prefix + cl_name, nil)
     end
 
     def materials
@@ -75,10 +70,13 @@ module XYZ
   end
 
   Task.add(:update_collection) do |user, params|
-    cid = params["cid"]
-    mid = params["mid"]
-    if cid != ""
-      User.new(user).material_collection_update(cid, mid)
+    cl_name = params["cl_name"]
+    mids = params["mid"]
+    if mids
+      mids = mids.collect { |mid| mid.to_i }
+    end
+    if cl_name != ""
+      User.new(user).material_collection_update(cl_name, mids)
     end
   end
 end

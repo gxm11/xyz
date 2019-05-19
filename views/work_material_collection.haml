@@ -1,18 +1,18 @@
 %p
-  %code Use 'user.cid' to copy a collection.
+  %code Use 'user.cl_name' to copy a collection.
 
 %form{method: "GET", action: "/work/#{@user.name}/materials"}  
   Create Collection:
-  %input{type: "text", name: "cid"}
+  %input{type: "text", name: "cl_name"}
 
 %h4
   Material Collections
 
 %ol  
-  - for cid, ids in @user.material_collections
+  - for cl_name, ids in @user.material_collections
     %li
-      %a{href: "/work/#{@user.name}/materials?cid=#{cid}"}
-        ="#{cid} (#{ids.size})"
+      %a{href: "/work/#{@user.name}/materials?cl_name=#{cl_name}"}
+        ="#{cl_name} (#{ids.size})"
       %aside
-        %a{href: "/task/v1/update_collection?cid=#{cid}"}
+        %a{href: "/task/v1/update_collection?cl_name=#{cl_name}"}
           delete

@@ -1,15 +1,15 @@
 %p
-  %code Use 'user.cid' to copy a code.
+  %code Use 'user.cname' to copy a code.
 
 %form{method: "get", action: "/work/#{@user.name}/update_code"}
   Create Code:
-  %input{type: "text", name: "cid"}
+  %input{type: "text", name: "cname"}
 
 %h4
   Calculation Codes
 
 %ol
-  - for cid, code in @user.calculation_codes
+  - for cname, code in @user.calculation_codes
     %li
-      %a{href: "/work/#{@user.name}/update_code?cid=#{cid}"}
-        =cid
+      %a{href: "/work/#{@user.name}/update_code?cname=#{cname}"}
+        =cname
