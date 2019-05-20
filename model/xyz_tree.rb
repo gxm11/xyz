@@ -29,6 +29,7 @@ module XYZ
 
     def initialize(cid)
       @data = create_node(cid)
+      @nodes = []
     end
 
     def cid
@@ -49,6 +50,10 @@ module XYZ
       ary
     end
 
+    def ready?
+      self.question.empty?
+    end
+
     def iteration_data(data_hash = self.data, &block)
       if !data_hash[:__end__]
         cid = data_hash[:__cid__]
@@ -62,6 +67,19 @@ module XYZ
             yield input, data_hash
           end
         end
+      end
+    end
+
+    # use this when ready
+    def iteration_hash(data_hash = self.data, &block)
+      yield data_hash
+      cid = data_hash[:__cid__]
+      code = Codes[cid]
+      code.in.each do |input|
+        next if !data_hash[input].is_a?(Hash)
+        # -- recursive -- #
+        iteration_hash(data_hash[input], &block)
+        # -- recursive -- #
       end
     end
 
@@ -106,16 +124,42 @@ module XYZ
           end
         end
       }
-      # expand data
-      expand!
+    end
+
+    def remove_node(cid)
+      iteration_hash { |data|
+        _cid = data[:__cid__]
+        code = Codes[_cid]
+        code.in.each do |input|
+          next if !data[input].is_a?(Hash)
+          next if data[input][:__cid__] != cid
+          data.delete(input)
+        end
+      }
+    end
+
+    def nodes
+      ary = []
+      iteration_hash { |data|
+        ary << data[:__cid__]
+      }
+      # --------------------------------------------------------------------- #
+      # 下面一行代码将按照执行的顺序输出所有的任务ID，原因如下：              #
+      # 在 iteration_hash 中，会递归的从上级往下级调用各个 code 对应的 hash   #
+      # 这使得在 ary 中，父任务的 ID 一定先于它的任一子任务的 ID              #
+      # 在不考虑重复的情况下，只需要从尾部开始顺次执行即可安全的完成全部任务  #
+      # 因为当执行某个父任务的时候，它的全部子任务都已经完成了                #
+      # uniq 方法会保留第一个遇到的项，所以要先 reverse 后再 uniq 即可            #
+      # --------------------------------------------------------------------- #
+      # Next line after this comments will output the ordered task ids.
+      # In the <iteration_hash>, all code-hashes are calling by their level.
+      # Which means when a task's id was added into <ary>, all its childs
+      # must be in the <ary>. If we ignore repeats, running <ary> from tail
+      # to head is a safe plan to run all tasks. Since Array#uniq keeps first
+      # repeat values in array, just let <ary> first take reverse then uniq.
+      ary.reverse.uniq
     end
   end
-
-  Task.add(:tree_refresh) do
-    Tree.refresh_database
-  end
-
-  Tree.refresh_database
 
   # -- user -- #
   class User
@@ -135,37 +179,28 @@ module XYZ
       prefix = "task_tree/"
       tree = load_data(prefix + tname)
       return if !tree
-      tree.expand!
-      tree.update(answer_hash)
-      save_data(prefix + tname, tree)
+      if answer_hash.empty?
+        # puts tree.nodes
+      else
+        tree.expand!
+        tree.update(answer_hash)
+        tree.expand!
+        save_data(prefix + tname, tree)
+      end
     end
 
     def task_tree_delete(tname)
       prefix = "task_tree/"
       save_data(prefix + tname, nil)
     end
-  end
 
-  Task.add(:task_tree_insert) do |user, params|
-    tname = params["tname"]
-    cid = params["cid"].to_i
-    User.new(user).task_tree_insert(tname, cid)
-  end
-
-  Task.add(:task_tree_delete) do |user, params|
-    tname = params["tname"]
-    User.new(user).task_tree_delete(tname)
-  end
-
-  Task.add(:task_tree_update) do |user, params|
-    tname = params["tname"]
-    answer_hash = {}
-    puts params
-    params.each_pair do |k, v|
-      if v =~ /^\d+$/
-        answer_hash[k] = v.to_i
-      end
+    def task_tree_remove_node(tname, cid)
+      prefix = "task_tree/"
+      tree = load_data(prefix + tname)
+      return if !tree
+      tree.remove_node(cid)
+      tree.expand!
+      save_data(prefix + tname, tree)
     end
-    User.new(user).task_tree_update(tname, answer_hash)
   end
 end

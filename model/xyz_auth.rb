@@ -47,24 +47,4 @@ module XYZ
       DB_PS[:auth_active_key]
     end
   end
-
-  Task.add(:login_check) do |params|
-    name = params[:username]
-    passwd = params[:password]
-    key = params[:activekey]
-    user = Auth::login_check(name, passwd, key)
-    user ? user[:name] : nil
-  end
-
-  Task.add(:add_active_key) do |user, params|
-    if user == "admin"
-      DB_PS.transaction do |db|
-        params["n"].to_i.times do
-          key = OpenSSL::Random.random_bytes(12).unpack("H*").first
-          [5, 10, 15].each { |i| key[i] = "-" }
-          db[:auth_active_key].push(key)
-        end
-      end
-    end
-  end
 end

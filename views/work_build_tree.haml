@@ -1,29 +1,62 @@
 %h4
 
+%h5 Base
 %form{method: "GET", action: "/task/v1/task_tree_insert"}
-  %p
-    Name: 
-    %input{type: "text", name: "tname", value: @tname}
-  %p
-    Main Task:
-    %select{name: "cid"}
-      - for cid, code in XYZ::Tree::Codes
-        %option{value: cid, selected: @tree && @tree.cid == cid}
-          =code.name
-  %input{type: "submit", value: "Insert Tree"}
+  Name:
+  %input{type: "text", name: "tname", value: @tname}
+  Main Task:
+  %select{name: "cid"}
+    - for cid, code in XYZ::Tree::Codes
+      %option{value: cid, selected: @tree && @tree.cid == cid}
+        =code.name
+  %aside
+    %input{type: "submit", value: "Clear All and Restart Building"}
 
 - if @tree
+  - ready = @tree.ready?
+  %p
+    - if !ready
+      %a{onclick: "toggle_tree()"} show / hide task list
+  - display = ready ? "block" : "none"
+  %div{id: "tree", style: "display: #{display}"}
+    %table
+      %tr
+        %th Task
+        %th remove
+      - for cid in @tree.nodes
+        %tr
+          %td=XYZ::Tree::Codes[cid].name
+          %td
+            %a{href: "/task/v1/task_tree_remove_node?tname=#{@tname}&cid=#{cid}"}
+              remove node
+
+- if @tree && !@tree.ready?
+  %h5 Select Next Nodes  
   %form{method: "POST", action: "/task/v1/task_tree_update?tname=#{@tname}"}
-    %pre=JSON.pretty_generate @tree.data
-    question
-    - for key, values in @tree.question
-      - cid, input = key.split("/", 2)
-      - c = XYZ::Tree::Codes[cid.to_i]
-      %p
-        =c.name
-        =input
-      %select{name: key}
-        - for i in values
-          %option{value: i}
-            =XYZ::Tree::Codes[i].name
     %input{type: "submit", value: "update"}
+    %table
+      %tr
+        %th Node
+        %th Input
+        %th Next Node
+      - for key, values in @tree.question
+        - cid, input = key.split("/", 2)
+        - father = XYZ::Tree::Codes[cid.to_i]
+        %tr
+          %td{style: "text-align: center"}=father.name
+          %td{style: "text-align: center"}=input
+          %td{style: "text-align: center"}
+            %select{name: key}
+              - for i in values
+                %option{value: i}
+                  =XYZ::Tree::Codes[i].name
+
+:javascript
+  function toggle_tree() {
+    var div = document.getElementById("tree")
+    if (div.style.display == "none") {
+      div.style.display = "block"
+    } else {
+      div.style.display = "none"
+    }
+  }

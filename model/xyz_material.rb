@@ -53,30 +53,4 @@ module XYZ
       ).order(:id).all
     end
   end
-
-  # ---------------------------------------------
-  # tasks
-  # ---------------------------------------------
-  Task.add(:insert_material) do |user, params|
-    name = params["name"]
-    if name != ""
-      files = Crack::XML.parse(params["files"])["material"] || {}
-      mid = Material.insert(name, files)
-      Material.update(mid, author: user)
-      if params["private"] == "private"
-        Material.update(mid, private: true)
-      end
-    end
-  end
-
-  Task.add(:update_collection) do |user, params|
-    cl_name = params["cl_name"]
-    mids = params["mid"]
-    if mids
-      mids = mids.collect { |mid| mid.to_i }
-    end
-    if cl_name != ""
-      User.new(user).material_collection_update(cl_name, mids)
-    end
-  end
 end
