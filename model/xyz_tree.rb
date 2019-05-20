@@ -159,6 +159,8 @@ module XYZ
     end
 
     def next_nodes(finish_nodes = [])
+      raise if !ready?
+
       if finish_nodes.include?(@cid)
         return []
       end
