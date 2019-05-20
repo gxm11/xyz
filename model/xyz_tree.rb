@@ -170,7 +170,7 @@ module XYZ
     end
 
     def next_nodes(finish_nodes = [])
-      raise if !ready?
+      raise "tree is not ready!" if !ready?
 
       if finish_nodes.include?(@cid)
         return []
@@ -210,6 +210,9 @@ module XYZ
         end
         marker = _marker.uniq
       end
+      # ---------------------------------------------------------------------
+      # 排除了无法计算的和被跳过的任务，剩下的任务就是 next_nodes
+      # ---------------------------------------------------------------------
       return ret
     end
 
@@ -222,7 +225,7 @@ module XYZ
     end
 
     def node_data(cid)
-      raise if !ready?
+      raise "tree is not ready!" if !ready?
       iteration_hash { |data|
         if data[:__cid__] == cid
           ret = { __cid__: cid }
