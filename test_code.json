@@ -1,0 +1,12 @@
+[
+    {
+        "cname": "band",
+        "description": "Calculate Band Data",
+        "enable": true,
+        "cores": "24",
+        "input": "OUTCAR",
+        "output": "BANDDAT1\nband.png",
+        "entrance": "# - entrance - #",
+        "property": ""
+    }
+]

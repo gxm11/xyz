@@ -29,9 +29,9 @@ module XYZ
   # Auth
   # ---------------------------------------------
   Task.add(:login_check) do |params|
-    name = params[:username]
-    passwd = params[:password]
-    key = params[:activekey]
+    name = params["username"]
+    passwd = params["password"]
+    key = params["activekey"]
     user = Auth::login_check(name, passwd, key)
     user ? user[:name] : nil
   end
@@ -132,16 +132,6 @@ module XYZ
       # -- update -- #
       User.new(user).calculation_code_update(cname, code)
     end
-  end
-
-  Task.add(:update_code_test) do |name, output, input|
-    DB_Code.insert(
-      name: name,
-      author: "test",
-      enable: true,
-      input: JSON.dump(input),
-      output: JSON.dump(output),
-    )
   end
 
   # ---------------------------------------------

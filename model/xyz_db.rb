@@ -37,8 +37,11 @@ module XYZ
       string :name, null: false
       string :author
       bool :enable, default: false
-      string :input
-      string :output
+      text :input
+      text :output
+      text :entrance
+      text :property
+      text :description
       timestamp :update_at, default: Sequel::CURRENT_TIMESTAMP
     end
   end

@@ -9,23 +9,38 @@ module XYZ
 
     def calculation_code_update(cname, code)
       prefix = "calculation_code/"
-      if getdata_by(prefix + cname).empty?
+      old_code = getdata_by(prefix + cname).values.first
+      if old_code.nil?
         DB_Code.insert(
           name: cname,
           author: @name,
           enable: !!code["enable"],
           input: JSON.dump(code["input"]),
           output: JSON.dump(code["output"]),
+          entrance: JSON.dump(code["entrance"]),
+          property: JSON.dump(code["property"]),
+          description: JSON.dump(code["description"]),
         )
+        need_refresh = true
       else
         DB_Code.where(name: cname, author: @name).update(
           enable: !!code["enable"],
           input: JSON.dump(code["input"]),
           output: JSON.dump(code["output"]),
+          entrance: JSON.dump(code["entrance"]),
+          property: JSON.dump(code["property"]),
+          description: JSON.dump(code["description"]),
           update_at: Sequel::CURRENT_TIMESTAMP,
         )
+        need_refresh = ["input", "output"].inject(false) { |ret, i|
+          ret || old_code[i] != code[i]
+        }
       end
       save_data(prefix + cname, code)
+      # -- refresh database -- #
+      if need_refresh
+        Tree.refresh_database
+      end
     end
   end
 end

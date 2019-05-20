@@ -20,10 +20,12 @@
     %table
       %tr
         %th Task
-        %th remove
+        %th Description
+        %th Remove
       - for cid in @tree.nodes
         %tr
           %td=XYZ::Tree::Codes[cid].name + " (#{cid})"
+          %td=XYZ::Tree::Codes[cid].text
           %td
             %a{href: "/task/v1/task_tree_remove_node?tname=#{@tname}&cid=#{cid}"}
               remove node

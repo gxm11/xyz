@@ -5,7 +5,7 @@ module XYZ
     # -- constants -- #
     Codes = {}
     Ends = []
-    Code = Struct.new(:id, :name, :in, :out)
+    Code = Struct.new(:id, :name, :in, :out, :text)
 
     # -- class methods -- #
     class << self
@@ -17,12 +17,17 @@ module XYZ
         DB_Code.where(enable: true).each do |code|
           input = JSON.parse(code[:input])
           output = JSON.parse(code[:output])
-          c = Code.new(code[:id], code[:name], input, output)
+          text = "Author: " + code[:author] + "\n" +
+                 code[:update_at].to_s + "\n" +
+                 code[:description] + "\n"
+
+          c = Code.new(code[:id], code[:name], input, output, text)
           Codes[c.id] = c
           if input.empty?
             Ends << c.id
           end
         end
+        p Codes
       end
     end
 
