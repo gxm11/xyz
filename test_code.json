@@ -4,8 +4,28 @@
         "description": "Calculate Band Data",
         "enable": true,
         "cores": "24",
-        "input": "OUTCAR",
+        "input": "OUTCAR;openmx.out",
         "output": "BANDDAT1\nband.png",
+        "entrance": "# - entrance - #",
+        "property": ""
+    },
+    {
+        "cname": "vasp",
+        "description": "vasp",
+        "enable": true,
+        "cores": "24",
+        "input": "INCAR;",
+        "output": "OUTCAR",
+        "entrance": "# - entrance - #",
+        "property": ""
+    },
+    {
+        "cname": "openmx",
+        "description": "openmx",
+        "enable": true,
+        "cores": "24",
+        "input": "openmx.dat",
+        "output": "openmx.out",
         "entrance": "# - entrance - #",
         "property": ""
     }

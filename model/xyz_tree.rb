@@ -12,23 +12,19 @@ module XYZ
       def refresh_database
         Codes.clear
         Ends.clear
-        Codes[0] = Code.new(0, "__END__", [], [])
+        Codes[0] = Code.new(0, "__END__", [], [], "admin\n__END__")
         Ends << 0
         DB_Code.where(enable: true).each do |code|
           # input 是 string INCAR;INCAR1;INCAR2
-          input = JSON.parse(code[:input]).collect { |a| a.join(";") }
+          input = JSON.parse(code[:input])
           output = JSON.parse(code[:output])
-          text = "Author: " + code[:author] + "\n" +
-                 code[:update_at].to_s + "\n" +
-                 code[:description] + "\n"
-
+          text = code[:author] + "\n" + code[:description]
           c = Code.new(code[:id], code[:name], input, output, text)
           Codes[c.id] = c
           if input.empty?
             Ends << c.id
           end
         end
-        p Codes
       end
     end
 

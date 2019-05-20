@@ -108,7 +108,7 @@ module XYZ
       code["cores"] = params["cores"].to_i
       # - input - #
       content = params["input"].strip.gsub(/\s*\n/, "\n")
-      content = content.split("\n").collect { |line| line.split(";") }
+      content = content.split("\n")
       code["input"] = content
       # - entrance - #
       content = params["entrance"].strip.gsub(/\s*\n/, "\n")

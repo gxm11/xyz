@@ -19,14 +19,21 @@
   %div{id: "tree", style: "display: #{display}"}
     %table
       %tr
+        %th
         %th Task
+        %th Author
         %th Description
         %th Remove
+      - index = 0
       - for cid in @tree.nodes
         %tr
-          %td=XYZ::Tree::Codes[cid].name + " (#{cid})"
-          %td=XYZ::Tree::Codes[cid].text
-          %td
+          - index += 1
+          %td{style: "text-align: center"}=index
+          %td{style: "text-align: center"}=XYZ::Tree::Codes[cid].name + " (#{cid})"
+          - author, description = XYZ::Tree::Codes[cid].text.split("\n", 2)
+          %td{style: "text-align: center"}=author
+          %td{style: "text-align: center"}=description
+          %td{style: "text-align: center"}
             %a{href: "/task/v1/task_tree_remove_node?tname=#{@tname}&cid=#{cid}"}
               remove node
 

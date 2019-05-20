@@ -35,3 +35,9 @@
 在完成第 3 步的时候，还需要完成：
 1. 监控任务完成情况
 2. 及时启动更多的任务
+
+## Code-Input
+目前的做法是 code 的 input 的每一行以字符串的形式传入，而不是之前设想的数组：
+```ruby
+input = ["OUTCAR;openmx.scf;BANDDAT1"]
+```
