@@ -26,14 +26,12 @@ module XYZ
 
     # -- instance methods -- #
     attr_reader :data
+    attr_reader :cid
 
     def initialize(cid)
       @data = create_node(cid)
+      @cid = cid
       @nodes = []
-    end
-
-    def cid
-      @data[:__cid__]
     end
 
     def create_node(cid)
@@ -158,6 +156,39 @@ module XYZ
       # to head is a safe plan to run all tasks. Since Array#uniq keeps first
       # repeat values in array, just let <ary> first take reverse then uniq.
       ary.reverse.uniq
+    end
+
+    def next_nodes(finish_nodes = [])
+      if finish_nodes.include?(@cid)
+        return []
+      end
+
+      ary = []
+      iteration_hash { |data|
+        _cid = data[:__cid__]
+        code = Codes[_cid]
+        childs = code.in.collect { |input| data[input][:__cid__] }
+        next if finish_nodes.include?(_cid)
+        ary << [_cid, childs - finish_nodes]
+      }
+
+      ret = []
+      marker = [@cid]
+      while !marker.empty?
+        _marker = []
+        for m in marker
+          as = ary.select { |_cid, childs| _cid == m }
+          cs = []
+          as.each { |_cid, childs| cs.concat(childs) }
+          if cs.empty?
+            ret << m
+          else
+            _marker.concat(cs)
+          end
+        end
+        marker = _marker.uniq
+      end
+      return ret
     end
   end
 

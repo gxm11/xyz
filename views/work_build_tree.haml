@@ -1,4 +1,7 @@
-%h4
+- # test
+- finish_nodes = [2,4,6]
+- if @tree && @tree.ready?
+  = @tree && @tree.next_nodes(finish_nodes)
 
 %h5 Base
 %form{method: "GET", action: "/task/v1/task_tree_insert"}
@@ -25,7 +28,7 @@
         %th remove
       - for cid in @tree.nodes
         %tr
-          %td=XYZ::Tree::Codes[cid].name
+          %td=XYZ::Tree::Codes[cid].name + " (#{cid})"
           %td
             %a{href: "/task/v1/task_tree_remove_node?tname=#{@tname}&cid=#{cid}"}
               remove node
