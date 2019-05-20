@@ -1,3 +1,5 @@
+# encoding:utf-8
+
 module XYZ
   class Tree
     # -- constants -- #
@@ -141,14 +143,14 @@ module XYZ
       iteration_hash { |data|
         ary << data[:__cid__]
       }
-      # --------------------------------------------------------------------- #
-      # 下面一行代码将按照执行的顺序输出所有的任务ID，原因如下：              #
-      # 在 iteration_hash 中，会递归的从上级往下级调用各个 code 对应的 hash   #
-      # 这使得在 ary 中，父任务的 ID 一定先于它的任一子任务的 ID              #
-      # 在不考虑重复的情况下，只需要从尾部开始顺次执行即可安全的完成全部任务  #
-      # 因为当执行某个父任务的时候，它的全部子任务都已经完成了                #
-      # uniq 方法会保留第一个遇到的项，所以要先 reverse 后再 uniq 即可            #
-      # --------------------------------------------------------------------- #
+      # ---------------------------------------------------------------------
+      # 下面一行代码将按照执行的顺序输出所有的任务ID，原因如下：
+      # 在 iteration_hash 中，会递归的从上级往下级调用各个 code 对应的 hash
+      # 这使得在 ary 中，父任务的 ID 一定先于它的任一子任务的 ID
+      # 在不考虑重复的情况下，只需要从尾部开始顺次执行即可安全的完成全部任务
+      # 因为当执行某个父任务的时候，它的全部子任务都已经完成了
+      # uniq 方法会保留第一个遇到的项，所以要先 reverse 后再 uniq 即可
+      # ---------------------------------------------------------------------
       # Next line after this comments will output the ordered task ids.
       # In the <iteration_hash>, all code-hashes are calling by their level.
       # Which means when a task's id was added into <ary>, all its childs
@@ -164,7 +166,9 @@ module XYZ
       if finish_nodes.include?(@cid)
         return []
       end
-
+      # ---------------------------------------------------------------------
+      # 提取出不包含 finish_nodes 中任意一个元素的结构，ary 中是 [cid, childs]
+      # ---------------------------------------------------------------------
       ary = []
       iteration_hash { |data|
         _cid = data[:__cid__]
@@ -173,7 +177,14 @@ module XYZ
         next if finish_nodes.include?(_cid)
         ary << [_cid, childs - finish_nodes]
       }
-
+      # ---------------------------------------------------------------------
+      # 找到所有可以立即计算的内容，但是要从头部开始找
+      # 首先选择第一个元素 @cid，标记上
+      # 对于每一个被标记的元素 cid，查看其 childs
+      # 如果 childs 为空，则此 cid 是可以立即计算的，添加到 ret 里
+      # 如果 childs 不为空，则标记其所有的 childs
+      # 由于 cid 已经验证过了，解除对 cid 的标记
+      # ---------------------------------------------------------------------
       ret = []
       marker = [@cid]
       while !marker.empty?
