@@ -115,12 +115,21 @@ module XYZ
         end
       }
       # update data
+      # 注意这里对当前 tree 内的全部节点进行了替换
+      # 这使得无法对同一个任务指定不同的子任务
       iteration_data { |i, data|
         if data[i].is_a?(Array)
           key = qkey(data[:__cid__], i)
           a = answer[key]
           if a
-            data[i] = create_node(a)
+            # 新增 node 前查看是否已经存在了，如果是的话就复制一份
+            if self.nodes.include?(a)
+              # 原则上这里的节点都是同一份，应该使用引用才对
+              # 但是以防万一还是使用 deep clone
+              data[i] = Marshal.load(Marshal.dump(node_hash(a)))
+            else
+              data[i] = create_node(a)
+            end
           end
         end
       }
@@ -202,6 +211,28 @@ module XYZ
         marker = _marker.uniq
       end
       return ret
+    end
+
+    def node_hash(cid)
+      iteration_hash { |data|
+        if data[:__cid__] == cid
+          return data
+        end
+      }
+    end
+
+    def node_data(cid)
+      raise if !ready?
+      iteration_hash { |data|
+        if data[:__cid__] == cid
+          ret = { __cid__: cid }
+          code = Codes[cid]
+          code.in.each do |input|
+            ret[input] = data[input][:__cid__]
+          end
+          return ret
+        end
+      }
     end
   end
 
