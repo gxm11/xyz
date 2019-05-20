@@ -15,7 +15,8 @@ module XYZ
         Codes[0] = Code.new(0, "__END__", [], [])
         Ends << 0
         DB_Code.where(enable: true).each do |code|
-          input = JSON.parse(code[:input])
+          # input 是 string INCAR;INCAR1;INCAR2
+          input = JSON.parse(code[:input]).collect { |a| a.join(";") }
           output = JSON.parse(code[:output])
           text = "Author: " + code[:author] + "\n" +
                  code[:update_at].to_s + "\n" +
@@ -47,9 +48,11 @@ module XYZ
 
     def select_inputs(input)
       ary = [0]
-      Codes.each_pair do |id, code|
-        if code.out.include?(input)
-          ary << id
+      input.split(";").each do |i|
+        Codes.each_pair do |id, code|
+          if code.out.include?(i)
+            ary << id
+          end
         end
       end
       ary
