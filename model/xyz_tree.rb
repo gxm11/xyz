@@ -10,6 +10,8 @@ module XYZ
       def refresh_database
         Codes.clear
         Ends.clear
+        Codes[0] = Code.new(0, "__END__", [], [])
+        Ends << 0
         DB_Code.where(enable: true).each do |code|
           input = JSON.parse(code[:input])
           output = JSON.parse(code[:output])
@@ -38,7 +40,7 @@ module XYZ
     end
 
     def select_inputs(input)
-      ary = []
+      ary = [0]
       Codes.each_pair do |id, code|
         if code.out.include?(input)
           ary << id

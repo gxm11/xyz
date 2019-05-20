@@ -48,7 +48,7 @@ end
 before "/work/:name/*" do
   key_auth = params[:name] + "@" + request.ip
   key = XYZ::Auth.auth_key(session[:auth])
-  if key != key_auth && params[:name] != "test"
+  if key != key_auth
     redirect "/login"
   else
     @user = XYZ::User.new(params[:name])
