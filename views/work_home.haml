@@ -17,8 +17,12 @@
       %a{href: "/work/#{@user.name}/calculation_plan"} Calculation Plan
 
 %h4
-  Calculations:
-  
+  Calculation Plans:
+  %ol
+    - for pid, comment in @user.calculation_plans
+      %li
+        %a
+          =comment + " (#{pid})"
 
 - if @user.name == "admin"
   %h4

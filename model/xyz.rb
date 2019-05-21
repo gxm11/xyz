@@ -11,6 +11,10 @@ require "sequel"
 
 module XYZ
   class Tree; end
+
+  module Plan
+    Calculation = Struct.new(:tree, :mids, :user, :active)
+  end
 end
 
 require "./model/xyz_db"

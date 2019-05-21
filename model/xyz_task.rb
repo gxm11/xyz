@@ -190,6 +190,21 @@ module XYZ
       end
     end
   end
+
+  # -----------------------------------------------
+  # Plan
+  # -----------------------------------------------
+  Task.add(:insert_plan) do |user, params|
+    u = User.new(user)
+    cl_name = params["cl_name"]
+    tname = params["tname"]
+    comment = params["comment"]
+    mids = u.material_collections[cl_name]
+    tree = u.task_trees[tname]
+    pid = XYZ::Plan.insert(tree, mids, user)
+    u.insert_plan(pid, comment)
+    XYZ::Plan.update
+  end
 end
 
 # -----------------------------------------------

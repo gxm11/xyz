@@ -16,6 +16,7 @@ module XYZ
 
     def check(tree, mids)
       result = {}
+      info = {}
       # 逐一检测每个材料是否满足条件
       for mid in mids
         # next: 需要马上计算的节点
@@ -44,13 +45,18 @@ module XYZ
             path = input_file_get(mid, child_cid, input)
             if !path
               nodes[:unready] << cid
+              if !info["#{mid}/#{cid}/unready"]
+                info["#{mid}/#{cid}/unready"] = [input]
+              else
+                info["#{mid}/#{cid}/unready"] << input
+              end
             end
           end
         end
         nodes.values.uniq!
         result[mid] = nodes
       end
-      return result
+      return result, info
     end
 
     def input_file_get(material_id, code_id, input)
@@ -93,6 +99,59 @@ module XYZ
         end
       end
       return nil
+    end
+
+    def insert(tree, mids, user)
+      pid = nil
+      DB_PS.transaction do |db|
+        pid = db[:calculation_plan].keys.max || 0
+        pid += 1
+        db[:calculation_plan][pid] = Calculation.new(
+          tree, mids, user, true
+        )
+      end
+      return pid
+    end
+
+    def calculation_plan(pid)
+      DB_PS[:calculation_plan][pid]
+    end
+
+    def update
+      if ready_for_next_submit?
+        material_id, code_id = random_choose_one_task
+        prepare_folder(material_id, code_id)
+      end
+    end
+
+    def random_choose_one_task
+      [0, 0]
+    end
+
+    def ready_for_next_submit?
+      false
+    end
+
+    def prepare_folder(mid, cid)
+    end
+  end
+
+  class User
+    def insert_plan(pid, comment)
+      plans = load_data("plans") || {}
+      plans[pid] = comment
+      save_data("plans", plans)
+    end
+
+    def plan_remove_materials(pid, mids = [])
+      plans = load_data("plans")
+      if plans.keys.include?(pid)
+        # do sth
+      end
+    end
+
+    def calculation_plans
+      load_data("plans") || {}
     end
   end
 end

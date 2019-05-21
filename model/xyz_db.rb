@@ -70,6 +70,9 @@ module XYZ
   if !ps.key?(:auth_hmac_key)
     ps[:auth_hmac_key] = "xyz"
   end
+  if !ps.key?(:calculation_plan)
+    ps[:calculation_plan] = {}
+  end
 
   DB_PS = ps
   DB_User = db[:user]

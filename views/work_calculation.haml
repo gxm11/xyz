@@ -1,6 +1,7 @@
 %h5 Plan
 
 - tree_nodes = @tree.nodes - [0]
+- ready = true
 %table
   %tr
     %th{width: "1%"} mid
@@ -11,13 +12,50 @@
   - for mid in @mids
     - m = XYZ::Material.material(mid)
     %tr
-      %td=m[:id]
+      %td=mid
       %td=m[:name]
       - for cid in tree_nodes
         - color, text = "", ""
-        - color, text = "#00c957", "run" if @result[mid][:run].include?(cid)
-        - color, text = "#7fffd4", "wait" if @result[mid][:wait].include?(cid)
-        - color, text = "#00ff00", "done" if @result[mid][:done].include?(cid)
-        - color, text = "#ffd700", "next" if @result[mid][:next].include?(cid)
-        - color, text = "#ff6374", "unready" if @result[mid][:unready].include?(cid)
+        - color, text = "#00c957", "" if @result[mid][:run].include?(cid)
+        - color, text = "#7fffd4", "" if @result[mid][:wait].include?(cid)
+        - color, text = "#00ff00", "" if @result[mid][:done].include?(cid)
+        - color, text = "#ffd700", "" if @result[mid][:next].include?(cid)
+        - if @result[mid][:unready].include?(cid)
+          - ready = false
+          - color, text = "#ff6374", "need: " + @info["#{mid}/#{cid}/unready"].join(", ")
         %td{bgcolor: color}=text
+
+%p Color 
+%table{style: "table-layout: fixed"}
+  %tr
+    %td{bgcolor: ""}
+    %td{bgcolor: "#00c957"} Run
+    %td{bgcolor: "#7fffd4"} Wait
+    %td{bgcolor: "#00ff00"} Done
+    %td{bgcolor: "#ffd700"} Next
+    %td{bgcolor: "#ff6374"} Unready
+
+%h5 Submit
+
+- if ready  
+  %form{method: "POST", action: "/task/v1/insert_plan"}
+    %input{type: "submit", value: "Submit Plan"}
+    %table
+      %tr 
+        %td Comment
+        %td        
+          %input{type: "text", name: "comment", required: "required", width: "100%"}
+          %input{type: "hidden", name: "cl_name", value: @cl_name}
+          %input{type: "hidden", name: "tname", value: @tname}                    
+      %tr
+        %td Author
+        %td=@user.name
+      %tr
+        %td Collection
+        %td=@cl_name + " (#{mid.size})"
+      %tr
+        %td Task Tree
+        %td=@tname
+- else
+  %p Plan is not ready!
+  

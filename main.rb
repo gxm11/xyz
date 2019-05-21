@@ -107,11 +107,11 @@ get "/work/:name/private_material" do
 end
 
 get "/work/:name/calculation" do
-  cl_name = params["cl_name"]
-  tname = params["tname"]
-  @mids = @user.material_collections[cl_name]
-  @tree = @user.task_trees[tname]
-  @result = XYZ::Plan.check(@tree, @mids)
+  @cl_name = params["cl_name"]
+  @tname = params["tname"]
+  @mids = @user.material_collections[@cl_name]
+  @tree = @user.task_trees[@tname]
+  @result, @info = XYZ::Plan.check(@tree, @mids)
   pass
 end
 
