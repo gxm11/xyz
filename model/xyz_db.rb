@@ -118,7 +118,7 @@ module XYZ
     def db_init
       FileUtils.mkdir("./user/#{@name}", mode: 0755)
       FileUtils.mkdir("./user/#{@name}/share", mode: 0755)
-      FileUtils.mkdir("./user/#{@name}/code", mode: 0755)
+      FileUtils.mkdir("./user/#{@name}/mail", mode: 0755)
     end
   end
 end

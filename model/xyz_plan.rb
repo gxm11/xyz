@@ -15,22 +15,40 @@ module XYZ
     module_function
 
     def check(tree, mids)
-      result = []
+      result = {}
       # 逐一检测每个材料是否满足条件
       for mid in mids
-        rows = DB_Calculation.select(:code_id).where(material_id: mid, state: STATE_DONE).all
-        finished_nodes = rows.collect { |r| r[:code_id] }
-        next_nodes = tree.next_nodes(finished_nodes)
-        for cid in next_nodes
+        # next: 需要马上计算的节点
+        # skip: 无需计算的节点
+        # unready: 缺少计算条件的节点（一定在 next 中）
+        # done: 已经完成的节点
+        tree_nodes = tree.nodes
+        nodes = { next: [], unready: [], done: [], run: [], wait: [] }
+        # 获取 done, run 和 wait 的节点
+        rows = DB_Calculation.select(:code_id, :state).where(material_id: mid).all
+        rows.each do |calc|
+          next if !tree_nodes.include?(calc[:code_id])
+          case calc[:state]
+          when STATE_DONE then nodes[:done] << calc[:code_id]
+          when STATE_RUN then nodes[:run] << calc[:code_id]
+          when STATE_WAIT then nodes[:wait] << calc[:code_id]
+          end
+        end
+        # 获取 next nodes
+        nodes[:next] = tree.next_nodes(nodes[:done])
+        # 判断 next 是否是 unready 状态
+        for cid in nodes[:next]
           data = tree.node_data(cid)
-          for input, next_cid in data
+          for input, child_cid in data
             next if input == :__cid__
-            path = input_file_get(mid, next_cid, input)
+            path = input_file_get(mid, child_cid, input)
             if !path
-              result << [mid, cid, input]
+              nodes[:unready] << cid
             end
           end
         end
+        nodes.values.uniq!
+        result[mid] = nodes
       end
       return result
     end
@@ -51,11 +69,26 @@ module XYZ
           if File.exist?("./user/#{user}/share/#{fn}")
             return "./user/#{user}/share/#{fn}"
           end
-        else
-          folders.each do |folder|
-            if File.exist?(folder + "/" + i)
-              return folder + "/" + i
-            end
+        end
+        # use file in another calculation?
+        if i.start_with?("calculation.")
+          _, _id, fn = i.split(".", 3)
+          if File.exist?("./calculation/#{_id}/#{fn}")
+            return "./calculation/#{_id}/#{fn}"
+          end
+        end
+        # use file in another material
+        if i.start_with?("material.")
+          _, _id, fn = i.split(".", 3)
+          if File.exist?("./material/#{_id}/#{fn}")
+            return "./material/#{_id}/#{fn}"
+          end
+        end
+        # search child calculation
+        # if failed -> search material folder
+        folders.each do |folder|
+          if File.exist?(folder + "/" + i)
+            return folder + "/" + i
           end
         end
       end

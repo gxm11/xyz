@@ -1,12 +1,11 @@
 %h5 Plan
 
-%pre=#JSON.pretty_generate(@result)
-
+- tree_nodes = @tree.nodes - [0]
 %table
   %tr
-    %th mid
-    %th material
-    - for cid in @tree.nodes - [0]
+    %th{width: "1%"} mid
+    %th{width: "1%"} material
+    - for cid in tree_nodes
       - c = XYZ::Tree::Codes[cid]
       %th=c.name + " (#{cid})"
   - for mid in @mids
@@ -14,8 +13,11 @@
     %tr
       %td=m[:id]
       %td=m[:name]
-      - for cid in @tree.nodes - [0]
-        - results = @result.select{|ret| ret[0] == mid && ret[1] == cid}
-        - results = results.collect{|ret| ret[2]}.join(";")
-        - color = (results == "") ? "" : "#ff0000"
-        %td{bgcolor: color}=results
+      - for cid in tree_nodes
+        - color, text = "", ""
+        - color, text = "#00c957", "run" if @result[mid][:run].include?(cid)
+        - color, text = "#7fffd4", "wait" if @result[mid][:wait].include?(cid)
+        - color, text = "#00ff00", "done" if @result[mid][:done].include?(cid)
+        - color, text = "#ffd700", "next" if @result[mid][:next].include?(cid)
+        - color, text = "#ff6374", "unready" if @result[mid][:unready].include?(cid)
+        %td{bgcolor: color}=text
