@@ -75,6 +75,7 @@ module XYZ
   DB_User = db[:user]
   DB_Material = db[:material]
   DB_Code = db[:code]
+  DB_Calculation = db[:calculation]
   # ---------------------------------------------
   # User
   # ---------------------------------------------

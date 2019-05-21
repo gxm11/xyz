@@ -1,0 +1,16 @@
+%h5 New Calculation Plan
+
+%form{method: "GET", action: "/work/#{@user.name}/calculation"}  
+  Collection:
+  %select{name: "cl_name"}
+    - for cl_name, ids in @user.material_collections
+      %option{value: cl_name}
+        ="#{cl_name} (#{ids.size})"
+  Task Tree:
+  %select{name: "tname"}
+    - for tname, tree in @user.task_trees
+      %option{value: tname}
+        =tname  
+  %input{type: "submit", value: "Submit"}
+
+%h4 Calculation Plans
