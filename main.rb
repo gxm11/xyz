@@ -143,7 +143,7 @@ end
 # data
 # -----------------------------------------------
 get "/data" do
-  @materials = XYZ::Material.materials()
+  @public_materials = XYZ::Material.materials(private: false)
   haml :data_home
 end
 

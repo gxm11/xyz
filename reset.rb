@@ -22,11 +22,19 @@ if ARGV.include?("--test")
       params = {
         "name" => "test-#{i}",
         "files" => "<material><f>f</f><id>test-#{i}</id></material>",
+        "private" => "private",
       }
       Task.run(:insert_material, "test", params)
     end
+    for i in 1..4
+      params = {
+        "name" => "admin-#{i}",
+        "files" => "<material><f>f</f><id>admin-#{i}</id></material>",
+      }
+      Task.run(:insert_material, "admin", params)
+    end
     # -- collections -- #
-    Task.run(:update_collection, "test", "cl_name" => "col-test", "mid" => ["1", "2", "3"])
+    Task.run(:update_collection, "test", "cl_name" => "col-test", "mid" => ["1", "2", "3", "5"])
     # -- codes -- #
     JSON.load(File.read("./test_code.json")).each do |params|
       Task.run(:update_code, "test", params)
