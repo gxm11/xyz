@@ -206,7 +206,7 @@ module XYZ
     XYZ::Plan.update
   end
 
-  Task.add(:update_plan) do |user, params|
+  Task.add(:update_plan) do
     XYZ::Plan.update
   end
 end
