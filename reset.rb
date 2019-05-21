@@ -1,7 +1,7 @@
 require "fileutils"
 
 if ARGV.include?("--reset")
-  system "rm db/*; rm -r material/*; rm -r user/*"
+  system "rm db/*; rm -r material/*; rm -r user/*; rm -r calculation/*"
 else
   puts "use ruby reset.rb --reset"
 end
@@ -16,7 +16,7 @@ if ARGV.include?("--test")
     }
     Task.run(:login_check, login_data)
     Task.run(:add_active_key, "admin", "n" => "5")
-    # -- user -- #    
+    # -- user -- #
     activekey = DB_PS[:auth_active_key].last
     login_data = {
       "username" => "test", "password" => "t", "activekey" => activekey,
