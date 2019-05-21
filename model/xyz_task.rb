@@ -205,6 +205,10 @@ module XYZ
     u.insert_plan(pid, comment)
     XYZ::Plan.update
   end
+
+  Task.add(:update_plan) do |user, params|
+    XYZ::Plan.update
+  end
 end
 
 # -----------------------------------------------

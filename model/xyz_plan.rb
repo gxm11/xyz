@@ -42,7 +42,7 @@ module XYZ
           data = tree.node_data(cid)
           for input, child_cid in data
             next if input == :__cid__
-            path = input_file_get(mid, child_cid, input)
+            i, path = input_file_get(mid, child_cid, input)
             if !path
               nodes[:unready] << cid
               if !info["#{mid}/#{cid}/unready"]
@@ -73,32 +73,32 @@ module XYZ
         if i.start_with?("share.")
           _, user, fn = i.split(".", 3)
           if File.exist?("./user/#{user}/share/#{fn}")
-            return "./user/#{user}/share/#{fn}"
+            return [i, "./user/#{user}/share/#{fn}"]
           end
         end
         # use file in another calculation?
         if i.start_with?("calculation.")
           _, _id, fn = i.split(".", 3)
           if File.exist?("./calculation/#{_id}/#{fn}")
-            return "./calculation/#{_id}/#{fn}"
+            return [i, "./calculation/#{_id}/#{fn}"]
           end
         end
         # use file in another material
         if i.start_with?("material.")
           _, _id, fn = i.split(".", 3)
           if File.exist?("./material/#{_id}/#{fn}")
-            return "./material/#{_id}/#{fn}"
+            return [i, "./material/#{_id}/#{fn}"]
           end
         end
         # search child calculation
         # if failed -> search material folder
         folders.each do |folder|
           if File.exist?(folder + "/" + i)
-            return folder + "/" + i
+            return [i, folder + "/" + i]
           end
         end
       end
-      return nil
+      return [nil, nil]
     end
 
     def insert(tree, mids, user)
@@ -119,17 +119,51 @@ module XYZ
 
     def update
       if ready_for_next_submit?
-        material_id, code_id = random_choose_one_task
-        prepare_folder(material_id, code_id)
+        plan_id, material_id, code_id = random_choose_tasks(1)
+        calc_id = insert_calculation(material_id, code_id)
+        # prepare folder
+        folder = "./calculation/#{calc_id}"
+        FileUtils.mkdir(folder)
+        # copy / link files
+        plan = calculation_plan(plan_id)
+        data = plan.tree.node_data(code_id)
+        for input, child_cid in data
+          next if input == :__cid__
+          i, path = input_file_get(material_id, child_cid, input)
+          FileUtils.cp(path, folder + "/" + i)
+        end
+        # generate qsub file
+        IO.write(folder + "/run.xyz.sh", "run.xyz.sh")
       end
     end
 
-    def random_choose_one_task
-      [0, 0]
+    def random_choose_tasks(n = 1)
+      tasks = []
+      for pid, plan in DB_PS[:calculation_plan]
+        next if !plan.active
+        for mid in plan.mids
+          done = DB_Calculation.select(:code_id).where(
+            material_id: mid, state: STATE_DONE,
+          ).all
+          plan.tree.next_nodes(done).each do |cid|
+            tasks << [pid, mid, cid]
+          end
+        end
+      end
+      return tasks.sample || [0, 0]
     end
 
     def ready_for_next_submit?
-      false
+      true
+    end
+
+    def insert_calculation(mid, cid)
+      pid = DB_Calculation.insert(
+        material_id: mid,
+        code_id: cid,
+        state: STATE_SLEEP,
+      )
+      return pid
     end
 
     def prepare_folder(mid, cid)
