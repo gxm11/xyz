@@ -164,6 +164,18 @@ module XYZ
     cid = params["cid"].to_i
     User.new(user).task_tree_remove_node(tname, cid)
   end
+
+  Task.add(:task_tree_clone) do |user, params|
+    tname = params["tname"]
+    t = params["tname2"]
+    if tname.split(".", 2).size == 2
+      _user, _t = tname.split(".", 2)
+      tree = User.new(_user).task_trees[_t]
+      if tree
+        User.new(user).task_tree_clone(t, tree)
+      end
+    end
+  end
 end
 
 # -----------------------------------------------

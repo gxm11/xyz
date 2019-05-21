@@ -284,5 +284,10 @@ module XYZ
       tree.expand!
       save_data(prefix + tname, tree)
     end
+
+    def task_tree_clone(tname, tree)
+      prefix = "task_tree/"
+      save_data(prefix + tname, tree)
+    end
   end
 end
