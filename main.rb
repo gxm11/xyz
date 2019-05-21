@@ -179,3 +179,13 @@ get "/file/share/:user/*" do
   fn = params["splat"].first
   send_file "./user/#{user}/share/#{fn}"
 end
+
+# -----------------------------------------------
+# loop thread
+# -----------------------------------------------
+Thread.start {
+  loop {
+    sleep(30)
+    # XYZ::Task.run(:update_plan)
+  }
+}
