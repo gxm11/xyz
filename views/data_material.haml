@@ -5,6 +5,17 @@
     %p="(id: #{id})"
 %hr
 
+%form{method: "POST", action: "/task/v1/upload_material_file", enctype: "multipart/form-data"}
+  %fieldset
+    %legend Select File to Upload
+    %input{type: "file", name: "file"}
+    Rename:
+    %input{type: "text", name: "filename"}
+    %input{type: "submit", value: "Upload File"}
+    %input{type: "hidden", name: "mid", value: id}
+
+%hr
+
 - for fn in Dir.entries("./material/#{id}/")
   - next if fn[0] == "."
   %p
@@ -19,7 +30,10 @@
         %img{src: "/file/material/#{id}/#{fn}"}
     - else
       %pre
-        =File.read("material/#{id}/#{fn}")
+        - if File.binary?("material/#{id}/#{fn}")
+          < BINARY FILE >
+        - else
+          =File.read("material/#{id}/#{fn}")
 
 :javascript
   function toggle_file(fn) {

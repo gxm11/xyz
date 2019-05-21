@@ -11,3 +11,4 @@ gem "thin" # server
 gem "haml"
 gem "rdiscount" # markdown
 gem "crack" # xml parser
+gem "ptools"

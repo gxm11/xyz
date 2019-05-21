@@ -1,5 +1,6 @@
 # encoding:utf-8
 
+require "ptools"
 require "haml"
 require "rdiscount"
 require "crack"

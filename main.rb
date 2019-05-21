@@ -101,6 +101,11 @@ get "/work/:name/build_tree" do
   pass
 end
 
+get "/work/:name/private_material" do
+  @private_materials = XYZ::Material.materials(private: true, author: @user.name)
+  pass
+end
+
 # -----------------------------------------------
 # render with template
 # -----------------------------------------------

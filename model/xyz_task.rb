@@ -63,6 +63,20 @@ module XYZ
     end
   end
 
+  Task.add(:upload_material_file) do |user, params|
+    tempfile = params["file"]["tempfile"]
+    if params["filename"] == ""
+      filename = params["file"]["filename"]
+    else
+      filename = params["filename"]
+    end
+    mid = params["mid"].to_i
+    m = XYZ::Material.material(mid)
+    if m[:author] == user
+      FileUtils.cp(tempfile.path, "./material/#{mid}/#{filename}")
+    end
+  end
+
   Task.add(:update_collection) do |user, params|
     cl_name = params["cl_name"]
     mids = params["mid"]
