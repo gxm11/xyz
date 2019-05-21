@@ -32,7 +32,7 @@ module XYZ
           description: JSON.dump(code["description"]),
           update_at: Sequel::CURRENT_TIMESTAMP,
         )
-        need_refresh = ["input", "output"].inject(false) { |ret, i|
+        need_refresh = ["input", "output", "enable"].inject(false) { |ret, i|
           ret || old_code[i] != code[i]
         }
       end

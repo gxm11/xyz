@@ -165,35 +165,3 @@ get "/file/share/:user/*" do
   fn = params["splat"].first
   send_file "./user/#{user}/share/#{fn}"
 end
-
-# -----------------------------------------------
-# test
-# -----------------------------------------------
-# get "/test/" do
-#   # - user - #
-#   passwd = OpenSSL::HMAC.hexdigest("SHA256", XYZ::Auth::HMAC_KEY, "test")
-#   XYZ::DB_User.insert(name: "test", passwd: passwd)
-#   user = XYZ::User.new("test")
-#   # - materials - #
-#   XYZ::Material.insert("test-01", {})
-#   XYZ::Material.insert("test-02", {})
-#   XYZ::Material.insert("test-03", {})
-#   # - collections - #
-#   user.material_collection_update("test", [1, 2, 3])
-#   # - codes - #
-#   codes = []
-#   codes << ["share_data", ["incar_template"], []]
-#   codes << ["base_data", ["lattice_vector", "atomic_frac"], []]
-#   codes << ["poscar_v0", ["POSCAR"], ["lattice_vector", "atomic_frac"]]
-#   codes << ["kpoints_v0", ["KPOINTS"], ["lattice_vector"]]
-#   codes << ["potcar_v0", ["POTCAR"], ["atomic_frac"]]
-#   codes << ["incar_v0", ["INCAR"], ["incar_template", "atomic_frac"]]
-#   codes << ["vasp_v0", ["OUTCAR"], ["INCAR", "POSCAR", "KPOINTS", "POTCAR"]]
-#   codes << ["band", ["band.png"], ["OUTCAR"]]
-
-#   codes.each do |code|
-#     XYZ::Task.run(:update_code_test, *code)
-#   end
-
-#   redirect "/login"
-# end

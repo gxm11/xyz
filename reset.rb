@@ -10,8 +10,13 @@ if ARGV.include?("--test")
   require "./model/xyz"
 
   module XYZ
+    # -- admin -- #
+    login_data = {
+      "username" => "admin", "password" => "admin", "activekey" => "first-active-key",
+    }
+    Task.run(:login_check, login_data)
     Task.run(:add_active_key, "admin", "n" => "5")
-    # -- user -- #
+    # -- user -- #    
     activekey = DB_PS[:auth_active_key].last
     login_data = {
       "username" => "test", "password" => "t", "activekey" => activekey,
