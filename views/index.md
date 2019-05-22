@@ -7,4 +7,4 @@ Xiaomi Guo
 : <gxm15@mails.tsinghua.edu.cn>
 
 ## Update
-[Plan.update](/task/v1/update_plan)
+[Plan.update](/task/v2/update_plan)

@@ -3,7 +3,7 @@
 require "sinatra"
 require "./model/xyz"
 
-set :port, 4567
+set :port, XYZ::Sinatra_Port
 set :bind, "0.0.0.0"
 set :server, "thin"
 set :markdown, :layout_engine => :haml

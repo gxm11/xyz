@@ -223,11 +223,11 @@ module XYZ
         
         cd $PBS_O_WORKDIR
         cp $PBS_NODEFILE node
-        curl http://localhost:#{settings.port}/task/v2/calculation_start?calc_id=#{calc_id}
+        curl http://localhost:#{Sinatra_Port}/task/v2/calculation_start?calc_id=#{calc_id}
 
         #{code.entrance}
 
-        curl http://localhost:#{settings.port}/task/v2/calculation_finish?calc_id=#{calc_id}
+        curl http://localhost:#{Sinatra_Port}/task/v2/calculation_finish?calc_id=#{calc_id}
         
       PBS_SCRIPT
 

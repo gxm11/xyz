@@ -15,6 +15,8 @@ module XYZ
   module Plan
     Calculation = Struct.new(:tree, :mids, :user, :active)
   end
+
+  Sinatra_Port = 4567
 end
 
 require "./model/xyz_db"
