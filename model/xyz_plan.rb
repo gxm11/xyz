@@ -160,6 +160,7 @@ module XYZ
         s = STATE_SLEEP if s == "Q"
         state[q] << [name, s]
       end
+      return state
     end
 
     def update_plan
