@@ -46,7 +46,7 @@
         "cores": "24",
         "input": "e",
         "output": "b",
-        "entrance": "# - entrance - #\necho b>b",
+        "entrance": "# - entrance - #\nsleep 15;echo b>b",
         "property": ""
     },
     {
@@ -56,7 +56,7 @@
         "cores": "24",
         "input": "e\nf\ng",
         "output": "c",
-        "entrance": "# - entrance - #\necho c>c",
+        "entrance": "# - entrance - #\nsleep 15;echo c>c",
         "property": ""
     },
     {
@@ -66,7 +66,7 @@
         "cores": "24",
         "input": "",
         "output": "d",
-        "entrance": "# - entrance - #\necho d>d",
+        "entrance": "# - entrance - #\nsleep 15;echo d>d",
         "property": ""
     },
     {
@@ -76,7 +76,7 @@
         "cores": "24",
         "input": "h",
         "output": "e",
-        "entrance": "# - entrance - #\necho e>e",
+        "entrance": "# - entrance - #\nsleep 15;echo e>e",
         "property": ""
     },
     {
@@ -86,7 +86,7 @@
         "cores": "24",
         "input": "i",
         "output": "f",
-        "entrance": "# - entrance - #\necho f>f",
+        "entrance": "# - entrance - #\nsleep 15;echo f>f",
         "property": ""
     },
     {
@@ -96,7 +96,7 @@
         "cores": "24",
         "input": "",
         "output": "g",
-        "entrance": "# - entrance - #\necho g>g",
+        "entrance": "# - entrance - #\nsleep 15;echo g>g",
         "property": ""
     },
     {
@@ -106,7 +106,7 @@
         "cores": "24",
         "input": "",
         "output": "h",
-        "entrance": "# - entrance - #\necho h>h",
+        "entrance": "# - entrance - #\nsleep 15;echo h>h",
         "property": ""
     },
     {
@@ -116,7 +116,7 @@
         "cores": "24",
         "input": "",
         "output": "i",
-        "entrance": "# - entrance - #\necho i>i",
+        "entrance": "# - entrance - #\nsleep 15;echo i>i",
         "property": ""
     }
 ]
