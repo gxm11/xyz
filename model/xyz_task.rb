@@ -218,6 +218,12 @@ module XYZ
     calc_id = params["calc_id"].to_i
     XYZ::Plan.calculation_finish(calc_id)
   end
+
+  Task.add(:plan_toggle_active) do |user, params|
+    plan_id = params["plan_id"].to_i
+    plan = XYZ::Plan.load(plan_id)
+    plan.active = !plan.active
+  end
 end
 
 # -----------------------------------------------

@@ -116,8 +116,8 @@ get "/work/:name/calculation" do
 end
 
 get "/work/:name/plan_console" do
-  plan_id = params["plan_id"].to_i
-  @plan = XYZ::Plan.load(plan_id)
+  @plan_id = params["plan_id"].to_i
+  @plan = XYZ::Plan.load(@plan_id)
   @tree = @plan.tree
   @mids = @plan.mids
   @result, @info = XYZ::Plan.check(@tree, @mids)

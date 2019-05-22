@@ -2,7 +2,8 @@
 
 %p Active
   =@plan.active
-  
+  %a{href: "/task/v1/plan_toggle_active?plan_id=#{@plan_id}"}
+
 - tree_nodes = @tree.nodes - [0]
 %table
   %tr
