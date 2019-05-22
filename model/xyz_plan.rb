@@ -184,7 +184,9 @@ module XYZ
       sleep = DB_Calculation.where(queue: queue, state: STATE_SLEEP).all
       for calculation in sleep
         calc_id = sleep[:id]
+        p "cd ./calculation/#{calc_id} && qsub -q #{queue} run.xyz.sh"
         ret = system("cd ./calculation/#{calc_id} && qsub -q #{queue} run.xyz.sh")
+        p ret
         if ret
           DB_Calculation.where(id: calc_id).update(state: STATE_WAIT)
         end
