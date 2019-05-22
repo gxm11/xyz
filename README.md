@@ -20,4 +20,4 @@ Use Sqlite3, table:
 1. Clone project `git clone https://github.com/gxm11/xyz.git`
 2. Change Sinatra_Port in `./model/xyz.rb`
 3. Init test database: `/home/guoxm/local/bin/ruby2.6.3/bin/ruby reset.rb --reset --test`
-4. Run `/home/guoxm/local/bin/ruby2.6.3/bin/ruby main.rb`
+4. Run `/home/guoxm/local/ruby2.6.3/bin/ruby main.rb`
