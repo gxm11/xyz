@@ -257,7 +257,7 @@ module XYZ
         # Entrance Code Here #
 
         date >> output.$PBS_JOBID
-        curl #{callback_url}/calculation_finish?calc_id=#{calc_id}&c=#{c}
+        curl #{callback_url}/calculation_finish?calc_id=#{calc_id}\&c=#{c}
       PBS_SCRIPT
 
       return sh
