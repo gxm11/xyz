@@ -150,7 +150,7 @@ module XYZ
     # 这里需要根据具体的 PBS 系统调整
     def check_pbs_state
       state = {} # calc_id => state
-      user = `whoami`
+      user = `whoami`.strip
       result = `qstat -u #{user} | grep .w003 | awk '{printf("%s %s %s\n",$3, $4, $10)}'`
       result.split("\n").each do |line|
         q, name, s = line.split
