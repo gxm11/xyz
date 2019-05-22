@@ -206,7 +206,17 @@ module XYZ
   end
 
   Task.add(:update_plan) do
+    p "update plan"
     XYZ::Plan.update_plan
+    p "-- update plan"
+  end
+
+  Task.add(:calculation_start) do |params|
+    p "start:" + params["calc_id"]
+  end
+
+  Task.add(:calculation_finish) do |params|
+    p "finish:" + params["calc_id"]
   end
 end
 
