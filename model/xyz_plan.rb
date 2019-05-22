@@ -264,7 +264,9 @@ module XYZ
     end
 
     def calculation_start(calc_id)
-      DB_Calculation.where(id: calc_id).update(state: STATE_RUN)
+      p "calc start #{calc_id}"
+      ret = DB_Calculation.where(id: calc_id).update(state: STATE_RUN)
+      p ret
     end
 
     def calculation_finish(calc_id)
