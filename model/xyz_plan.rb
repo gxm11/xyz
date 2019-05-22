@@ -174,11 +174,25 @@ module XYZ
     def update_plan
       tasks = avaliable_tasks
       states = check_pbs_state
-      # 对 queue cmt 进行处理
+      # 对 queue: cmt 进行处理
       [["cmt", 2]].each do |q, n_jobs|
         states[q] ||= []
-        _sleep = states[q].select { |name, s| s == STATE_SLEEP }.size
-        if _sleep < n_jobs
+        # 对之前标记为 wait 和 run 的计算，
+        # 如果从 states 里消失了，则标记为 error
+        jobs = states[q].select { |name, s|
+          name.start_with?("xyz.")
+        }.collect { |name, s|
+          name[4..-1]
+        }
+        _wait = DB_Calculation.where(queue: q, state: STATE_WAIT).all
+        _run = DB_Calculation.where(queue: q, state: STATE_RUN).all
+        _cancel = _wait.collect { |row| row[:id] } - jobs
+        _error = _run.collect { |row| row[:id] } - jobs
+        DB_Calculation.where { _cancel.include?(id) }.update(state: STATE_ERROR)
+        DB_Calculation.where { _error.include?(id) }.update(state: STATE_ERROR)
+        # 如果睡眠的任务较少，则新增几个睡眠任务
+        n_sleep = states[q].select { |name, s| s == STATE_SLEEP }.size
+        if n_sleep < n_jobs
           ret = wakeup_calculation(q)
           if !ret
             prepare_calculation(q, tasks.sample(n_jobs))
@@ -191,9 +205,7 @@ module XYZ
       sleep = DB_Calculation.where(queue: queue, state: STATE_SLEEP).all
       for calculation in sleep
         calc_id = calculation[:id]
-        p "cd ./calculation/#{calc_id} && qsub -q #{queue} run.xyz.sh"
         ret = system("cd ./calculation/#{calc_id} && qsub -q #{queue} run.xyz.sh")
-        p ret
         if ret
           DB_Calculation.where(id: calc_id).update(state: STATE_WAIT)
         end
