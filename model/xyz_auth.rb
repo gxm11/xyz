@@ -53,7 +53,7 @@ module XYZ
 
     def task_code(params)
       if params.keys.include?("calc_id")
-        return OpenSSL::HMAC.hexdigest("SHA256", HMAC_KEY, params["calc_id"].to_s)
+        return OpenSSL::HMAC.hexdigest("SHA256", HMAC_KEY, params["calc_id"].to_s)[0..8]
       end
     end
   end
