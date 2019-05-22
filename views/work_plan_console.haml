@@ -1,10 +1,11 @@
 %h5 Plan - Console
 
 %p
-  Active
-  %aside
-    %a{href: "/task/v1/plan_toggle_active?plan_id=#{@plan_id}"}
-      ="Toggle to #{!@plan.active}"
+  ="Active is #{@plan.active}"
+
+%aside
+  %a{href: "/task/v1/plan_toggle_active?plan_id=#{@plan_id}"}
+    ="Toggle to #{!@plan.active}"
 
 - tree_nodes = @tree.nodes - [0]
 %table

@@ -136,7 +136,7 @@ module XYZ
           }.collect { |row| row[:code_id] }
           # 已经提交的部分
           submit = info.select { |row|
-            row[:state] != STATE_DONE
+            row[:state] != STATE_DONE && row[:state] != STATE_SLEEP
           }.collect { |row| row[:code_id] }
           # 如果没有提交，任务将会加入
           for code_id in plan.tree.next_nodes(done)
