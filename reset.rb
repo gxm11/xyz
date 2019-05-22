@@ -26,7 +26,7 @@ if ARGV.include?("--test")
     for i in 1..4
       params = {
         "name" => "test-#{i}",
-        "files" => "<material><f>f</f><id>test-#{i}</id></material>",
+        "files" => "<material><i>i</i><id>test-#{i}</id></material>",
         "private" => "private",
       }
       Task.run(:insert_material, "test", params)
@@ -34,7 +34,7 @@ if ARGV.include?("--test")
     for i in 1..4
       params = {
         "name" => "admin-#{i}",
-        "files" => "<material><f>f</f><id>admin-#{i}</id></material>",
+        "files" => "<material><i>i</i><id>admin-#{i}</id></material>",
       }
       Task.run(:insert_material, "admin", params)
     end

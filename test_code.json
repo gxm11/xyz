@@ -30,13 +30,93 @@
         "property": ""
     },
     {
-        "cname": "f",
-        "description": "f*f*f*",
+        "cname": "node-a",
+        "description": "a << [b, c, d]",
         "enable": true,
         "cores": "24",
-        "input": "f",
-        "output": "openmx.out",
-        "entrance": "# - entrance - #\nsleep 15\n",
+        "input": "b\nc\nd",
+        "output": "a",
+        "entrance": "# - entrance - #\nsleep 15;echo a>a",
+        "property": ""
+    },
+    {
+        "cname": "node-b",
+        "description": "b << [e]",
+        "enable": true,
+        "cores": "24",
+        "input": "e",
+        "output": "b",
+        "entrance": "# - entrance - #\necho b>b",
+        "property": ""
+    },
+    {
+        "cname": "node-c",
+        "description": "c << [e, f, g]",
+        "enable": true,
+        "cores": "24",
+        "input": "e\nf\ng",
+        "output": "c",
+        "entrance": "# - entrance - #\necho c>c",
+        "property": ""
+    },
+    {
+        "cname": "node-d",
+        "description": "d << []",
+        "enable": true,
+        "cores": "24",
+        "input": "",
+        "output": "d",
+        "entrance": "# - entrance - #\necho d>d",
+        "property": ""
+    },
+    {
+        "cname": "node-e",
+        "description": "e << [h]",
+        "enable": true,
+        "cores": "24",
+        "input": "h",
+        "output": "e",
+        "entrance": "# - entrance - #\necho e>e",
+        "property": ""
+    },
+    {
+        "cname": "node-f",
+        "description": "f << [i]",
+        "enable": true,
+        "cores": "24",
+        "input": "i",
+        "output": "f",
+        "entrance": "# - entrance - #\necho f>f",
+        "property": ""
+    },
+    {
+        "cname": "node-g",
+        "description": "g << []",
+        "enable": true,
+        "cores": "24",
+        "input": "",
+        "output": "g",
+        "entrance": "# - entrance - #\necho g>g",
+        "property": ""
+    },
+    {
+        "cname": "node-h",
+        "description": "h << []",
+        "enable": true,
+        "cores": "24",
+        "input": "",
+        "output": "h",
+        "entrance": "# - entrance - #\necho h>h",
+        "property": ""
+    },
+    {
+        "cname": "node-i",
+        "description": "i << []",
+        "enable": true,
+        "cores": "24",
+        "input": "",
+        "output": "i",
+        "entrance": "# - entrance - #\necho i>i",
         "property": ""
     }
 ]
