@@ -16,10 +16,10 @@
       %td=m[:name]
       - for cid in tree_nodes
         - color, text = "", ""
+        - color, text = "#ffd700", "" if @result[mid][:next].include?(cid)
         - color, text = "#00c957", "" if @result[mid][:run].include?(cid)
         - color, text = "#7fffd4", "" if @result[mid][:wait].include?(cid)
-        - color, text = "#00ff00", "" if @result[mid][:done].include?(cid)
-        - color, text = "#ffd700", "" if @result[mid][:next].include?(cid)
+        - color, text = "#00ff00", "" if @result[mid][:done].include?(cid)        
         - if @result[mid][:unready].include?(cid)
           - ready = false
           - color, text = "#ff6374", "need: " + @info["#{mid}/#{cid}/unready"].join(", ")

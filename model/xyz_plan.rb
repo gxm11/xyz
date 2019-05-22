@@ -149,7 +149,6 @@ module XYZ
           DB_PS.transaction do |db|
             db[:calculation_plan][plan_id].active = false
           end
-          warn "Plan #{plan_id} deactived."
         end
       end
       return avaliable_tasks
@@ -264,9 +263,7 @@ module XYZ
     end
 
     def calculation_start(calc_id)
-      p "calc start #{calc_id}"
       ret = DB_Calculation.where(id: calc_id).update(state: STATE_RUN)
-      p ret
     end
 
     def calculation_finish(calc_id)
