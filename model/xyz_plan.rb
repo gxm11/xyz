@@ -168,6 +168,7 @@ module XYZ
       states = check_pbs_state
       # 对 queue cmt 进行处理
       [["cmt", 2]].each do |q, n_jobs|
+        states[q] ||= []
         _sleep = states[q].select { |name, s| s == STATE_SLEEP }.size
         if _sleep < n_jobs
           ret = wakeup_calculation(q)
