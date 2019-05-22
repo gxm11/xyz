@@ -151,12 +151,8 @@ get "/task/v1/:task" do
 end
 
 get "/task/v2/:task" do
-  p request.ip
-  p params[:task]
-  if request.ip == "127.0.0.1"
-    task = params[:task].to_sym
-    XYZ::Task.run(task, params)
-  end
+  task = params[:task].to_sym
+  XYZ::Task.run(task, params)
 end
 # -----------------------------------------------
 # data

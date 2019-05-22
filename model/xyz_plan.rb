@@ -219,6 +219,7 @@ module XYZ
 
     def run_xyz_sh(calc_id, material_id, code_id)
       code = DB_Code.where(id: code_id).first
+      host = "w003.phys.tsinghua.edu.cn"
 
       sh = <<~PBS_SCRIPT
         #PBS -N xyz.#{calc_id}
@@ -229,11 +230,11 @@ module XYZ
         
         cd $PBS_O_WORKDIR
         cp $PBS_NODEFILE node
-        curl http://localhost:#{Sinatra_Port}/task/v2/calculation_start?calc_id=#{calc_id}
+        curl http://#{host}:#{Sinatra_Port}/task/v2/calculation_start?calc_id=#{calc_id}
 
         #{code[:entrance]}
 
-        curl http://localhost:#{Sinatra_Port}/task/v2/calculation_finish?calc_id=#{calc_id}
+        curl http://#{host}:#{Sinatra_Port}/task/v2/calculation_finish?calc_id=#{calc_id}
         
       PBS_SCRIPT
 
