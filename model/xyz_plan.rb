@@ -270,6 +270,10 @@ module XYZ
     def calculation_finish(calc_id)
       DB_Calculation.where(id: calc_id).update(state: STATE_DONE)
     end
+
+    def load(plan_id)
+      DB_PS[:calculation_plan][plan_id]
+    end
   end
 
   class User
