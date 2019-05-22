@@ -203,7 +203,6 @@ module XYZ
     tree = u.task_trees[tname]
     pid = XYZ::Plan.insert(tree, mids, user)
     u.insert_plan(pid, comment)
-    XYZ::Plan.update
   end
 
   Task.add(:update_plan) do
