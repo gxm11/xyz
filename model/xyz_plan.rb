@@ -149,6 +149,7 @@ module XYZ
           DB_PS.transaction do |db|
             db[:calculation_plan][plan_id].active = false
           end
+          warn "Plan #{plan_id} deactived."
         end
       end
       return avaliable_tasks
