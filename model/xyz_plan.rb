@@ -216,7 +216,7 @@ module XYZ
     end
 
     def run_xyz_sh(calc_id, material_id, code_id)
-      code = DB_Code.where(id: code_id)
+      code = DB_Code.where(id: code_id).first
 
       sh = <<~PBS_SCRIPT
         #PBS -N xyz.#{calc_id}
