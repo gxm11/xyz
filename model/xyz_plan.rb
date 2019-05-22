@@ -246,7 +246,7 @@ module XYZ
         #PBS -l nodes=1:ppn=#{code[:cores]}
         #PBS -l Qlist=n24
         
-        curl #{callback_url}/calculation_start?calc_id=#{calc_id}&c=#{c}
+        curl #{callback_url}/calculation_start?calc_id=#{calc_id}\&c=#{c}
 
         date > output.$PBS_JOBID        
         cd $PBS_O_WORKDIR
