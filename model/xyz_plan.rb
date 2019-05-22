@@ -183,7 +183,7 @@ module XYZ
     def wakeup_calculation(queue)
       sleep = DB_Calculation.where(queue: queue, state: STATE_SLEEP).all
       for calculation in sleep
-        calc_id = sleep[:id]
+        calc_id = calculation[:id]
         p "cd ./calculation/#{calc_id} && qsub -q #{queue} run.xyz.sh"
         ret = system("cd ./calculation/#{calc_id} && qsub -q #{queue} run.xyz.sh")
         p ret
