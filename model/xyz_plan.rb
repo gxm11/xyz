@@ -146,9 +146,7 @@ module XYZ
           end
         end
         if active == false
-          DB_PS.transaction do |db|
-            db[:calculation_plan][plan_id].active = false
-          end
+          plan_toggle_active(plan_id)
         end
       end
       return avaliable_tasks
@@ -244,13 +242,12 @@ module XYZ
       sh = <<~PBS_SCRIPT
         #PBS -N xyz.#{calc_id}
         #PBS -l nodes=1:ppn=#{code[:cores]}
-        #PBS -l Qlist=n24
+        #PBS -l Qlist=n24       
         
-        curl #{callback_url}/calculation_start?calc_id=#{calc_id}\\&c=#{c}
-
-        date > output.$PBS_JOBID        
         cd $PBS_O_WORKDIR
-        cp $PBS_NODEFILE node        
+        cp $PBS_NODEFILE node
+        curl #{callback_url}/calculation_start?calc_id=#{calc_id}\\&c=#{c}
+        date > output.$PBS_JOBID
 
         # Entrance Code Here #
         #{code[:entrance]}
@@ -275,7 +272,7 @@ module XYZ
       DB_PS[:calculation_plan][plan_id]
     end
 
-    def plan_toggle_active(plan_id, active = true)
+    def plan_toggle_active(plan_id)
       DB_PS.transaction do |db|
         plan = db[:calculation_plan][plan_id]
         plan.active = !plan.active
