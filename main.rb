@@ -186,7 +186,7 @@ end
 # -----------------------------------------------
 Thread.start {
   loop {
-    sleep(30)
-    # XYZ::Task.run(:update_plan)
+    sleep(5)
+    XYZ::Task.run(:update_plan)
   }
 }
