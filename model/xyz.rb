@@ -16,6 +16,7 @@ module XYZ
     Calculation = Struct.new(:tree, :mids, :user, :active)
   end
 
+  Sinatra_Host = "w003.phys.tsinghua.edu.cn"
   Sinatra_Port = 4567
 end
 
