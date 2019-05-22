@@ -10,7 +10,7 @@ module XYZ
 
     def login_check(name, passwd, key)
       # 0. hmac password
-      passwd = OpenSSL::HMAC.hexdigest("SHA256", HMAC_KEY, passwd)
+      passwd = hmac(passwd)
       # if there's not active key
       if key == ""
         user = DB_User.where(name: name).first
@@ -53,8 +53,12 @@ module XYZ
 
     def task_code(params)
       if params.keys.include?("calc_id")
-        return OpenSSL::HMAC.hexdigest("SHA256", HMAC_KEY, params["calc_id"].to_s)[0..8]
+        return hmac(params["calc_id"])[0..8]
       end
+    end
+
+    def hmac(string)
+      OpenSSL::HMAC.hexdigest("SHA256", HMAC_KEY, string.to_s)
     end
   end
 end
