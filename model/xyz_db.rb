@@ -57,7 +57,7 @@ module XYZ
       timestamp :create_at, default: Sequel::CURRENT_TIMESTAMP
       timestamp :start_at
       timestamp :finish_at
-      string :state, default: "SLEEP"
+      string :state, default: "CANCEL"
     end
   end
 

@@ -211,6 +211,7 @@ module XYZ
         end
         sh = run_xyz_sh(calc_id, material_id, code_id)
         IO.binwrite(folder + "/" + "run.xyz.sh", sh)
+        DB_Calculation.where(id: calc_id).update(state: STATE_SLEEP)
       end
     end
 
