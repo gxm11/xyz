@@ -212,11 +212,13 @@ module XYZ
   end
 
   Task.add(:calculation_start) do |params|
-    p "start:" + params["calc_id"]
+    calc_id = params["calc_id"].to_i
+    XYZ::Plan.calculation_start(calc_id)
   end
 
   Task.add(:calculation_finish) do |params|
-    p "finish:" + params["calc_id"]
+    calc_id = params["calc_id"].to_i
+    XYZ::Plan.calculation_finish(calc_id)
   end
 end
 

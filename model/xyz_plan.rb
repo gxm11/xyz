@@ -123,6 +123,7 @@ module XYZ
       for plan_id, plan in DB_PS[:calculation_plan]
         # 1.1 跳过不活跃的计划
         next if !plan.active
+        active = false
         # 1.2 对每一个计划，遍历全部的材料
         for material_id in plan.mids
           # 从数据库中读取信息
@@ -140,7 +141,13 @@ module XYZ
           # 如果没有提交，任务将会加入
           for code_id in plan.tree.next_nodes(done)
             next if submit.include?(code_id)
+            active = true
             avaliable_tasks << [plan_id, material_id, code_id]
+          end
+        end
+        if active == false
+          DB_PS.transaction do |db|
+            db[:calculation_plan][plan_id].active = false
           end
         end
       end
@@ -241,6 +248,14 @@ module XYZ
       PBS_SCRIPT
 
       return sh
+    end
+
+    def calculation_start(calc_id)
+      DB_Calculation.where(id: calc_id).update(state: STATE_RUN)
+    end
+
+    def calculation_finish(calc_id)
+      DB_Calculation.where(id: calc_id).update(state: STATE_DONE)
     end
   end
 
