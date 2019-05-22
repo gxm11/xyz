@@ -161,7 +161,7 @@ end
 
 get "/task/v2/:task" do
   task = params[:task].to_sym
-  if XYZ::Auth.task_check(params)
+  if XYZ::Auth.task_check(params) && request.ip.start_with?("10.")
     XYZ::Task.run(task, params)
   end
 end
