@@ -5,7 +5,7 @@ module XYZ
     # -- constants -- #
     Codes = {}
     Ends = []
-    Code = Struct.new(:id, :name, :in, :out, :text)
+    Code = Struct.new(:id, :name, :cores, :in, :out, :text)
 
     # -- class methods -- #
     class << self
@@ -18,6 +18,7 @@ module XYZ
           # input 是 string INCAR;INCAR1;INCAR2
           input = JSON.parse(code[:input])
           output = JSON.parse(code[:output])
+          cores = code[:cores]
           text = code[:author] + "\n" + code[:description]
           c = Code.new(code[:id], code[:name], input, output, text)
           Codes[c.id] = c

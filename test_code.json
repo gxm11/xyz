@@ -28,5 +28,15 @@
         "output": "openmx.out",
         "entrance": "# - entrance - #",
         "property": ""
+    },
+    {
+        "cname": "f",
+        "description": "f*f*f*",
+        "enable": true,
+        "cores": "24",
+        "input": "f",
+        "output": "openmx.out",
+        "entrance": "# - entrance - #",
+        "property": ""
     }
 ]

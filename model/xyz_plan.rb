@@ -117,14 +117,88 @@ module XYZ
       DB_PS[:calculation_plan][pid]
     end
 
-    def update
-      if ready_for_next_submit?
-        plan_id, material_id, code_id = random_choose_tasks(1)
-        calc_id = insert_calculation(material_id, code_id)
-        # prepare folder
+    def generate_avaliable_tasks
+      avaliable_tasks = []
+      # 1. 检查所有的计划，统计任务列表
+      for plan_id, plan in DB_PS[:calculation_plan]
+        # 1.1 跳过不活跃的计划
+        next if !plan.active
+        # 1.2 对每一个计划，遍历全部的材料
+        for material_id in plan.mids
+          # 从数据库中读取信息
+          info = DB_Calculation.select(:code_id, :state).where(
+            material_id: material_id,
+          ).all
+          # 已经完成的部分
+          done = info.select { |row|
+            row[:state] == STATE_DONE
+          }.collect { |row| row[:code_id] }
+          # 已经提交的部分
+          submit = info.select { |row|
+            row[:state] != STATE_DONE
+          }.collect { |row| row[:code_id] }
+          # 如果没有提交，任务将会加入
+          for code_id in plan.tree.next_nodes(done)
+            next if submit.include?(code_id)
+            avaliable_tasks << [plan_id, material_id, code_id]
+          end
+        end
+      end
+      return avaliable_tasks
+    end
+
+    # 这里需要根据具体的 PBS 系统调整
+    def check_pbs_state
+      state = {} # calc_id => state
+      user = `whoami`
+      result = `qstat -u #{user} | grep .w003 | awk '{printf("%s %s %s\n",$3, $4, $10)}'`
+      result.split("\n").each do |line|
+        q, name, s = line.split
+        state[q] ||= []
+        s = STATE_ERROR
+        s = STATE_RUN if s == "R"
+        s = STATE_SLEEP if s == "Q"
+        state[q] << [name, s]
+      end
+    end
+
+    def update_pbs_plan
+      tasks = avaliable_tasks
+      states = check_pbs_state
+      # 对 queue cmt 进行处理
+      [["cmt", 2]].each do |q, n_jobs|
+        _sleep = states[q].select { |name, s| s == STATE_SLEEP }.size
+        if _sleep <= n_jobs
+          ret = wakeup_calculation(q)
+          if !ret
+            prepare_calculation(q, tasks.sample(n_jobs))
+          end
+        end
+      end
+    end
+
+    def wakeup_calculation(queue)
+      sleep = DB_Calculation.where(queue: queue, state: STATE_SLEEP).all
+      for calculation in sleep
+        calc_id = sleep[:id]
+        ret = system("cd ./calculation/#{calc_id} && qsub -q #{queue} run.xyz.sh")
+        if ret
+          DB_Calculation.where(id: calc_id).update(state: STATE_WAIT)
+        end
+      end
+      return !sleep.empty?
+    end
+
+    def prepare_calculation(queue, tasks)
+      for plan_id, material_id, code_id in tasks
+        code = Tree::Codes[code_id]
+        calc_id = DB_Calculation.insert(
+          material_id: material_id,
+          code_id: code_id,
+          queue: queue,
+        )
         folder = "./calculation/#{calc_id}"
         FileUtils.mkdir(folder)
-        # copy / link files
         plan = calculation_plan(plan_id)
         data = plan.tree.node_data(code_id)
         for input, child_cid in data
@@ -132,41 +206,15 @@ module XYZ
           i, path = input_file_get(material_id, child_cid, input)
           FileUtils.cp(path, folder + "/" + i)
         end
-        # generate qsub file
-        IO.write(folder + "/run.xyz.sh", "run.xyz.sh")
+        sh = run_xyz_sh(calc_id, material_id, code)
+        IO.binwrite(folder + "/" + "run.xyz.sh", sh)
       end
     end
 
-    def random_choose_tasks(n = 1)
-      tasks = []
-      for pid, plan in DB_PS[:calculation_plan]
-        next if !plan.active
-        for mid in plan.mids
-          done = DB_Calculation.select(:code_id).where(
-            material_id: mid, state: STATE_DONE,
-          ).all
-          plan.tree.next_nodes(done).each do |cid|
-            tasks << [pid, mid, cid]
-          end
-        end
-      end
-      return tasks.sample || [0, 0]
-    end
-
-    def ready_for_next_submit?
-      true
-    end
-
-    def insert_calculation(mid, cid)
-      pid = DB_Calculation.insert(
-        material_id: mid,
-        code_id: cid,
-        state: STATE_SLEEP,
-      )
-      return pid
-    end
-
-    def prepare_folder(mid, cid)
+    def run_xyz_sh(calc_id, material_id, code)
+      sh = <<~PBS_SCRIPT
+        
+      PBS_SCRIPT
     end
   end
 

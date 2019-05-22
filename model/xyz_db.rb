@@ -36,6 +36,7 @@ module XYZ
       primary_key :id
       string :name, null: false
       string :author
+      integer :cores, default: 24
       bool :enable, default: false
       text :input
       text :output
@@ -52,6 +53,7 @@ module XYZ
       primary_key :id
       string :material_id, null: false
       string :code_id, null: false
+      string :queue, default: "cmt"
       timestamp :create_at, default: Sequel::CURRENT_TIMESTAMP
       timestamp :start_at
       timestamp :finish_at

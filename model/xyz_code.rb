@@ -15,6 +15,7 @@ module XYZ
           name: cname,
           author: @name,
           enable: !!code["enable"],
+          cores: code["cores"].to_i,
           input: JSON.dump(code["input"]),
           output: JSON.dump(code["output"]),
           entrance: JSON.dump(code["entrance"]),
@@ -25,6 +26,7 @@ module XYZ
       else
         DB_Code.where(name: cname, author: @name).update(
           enable: !!code["enable"],
+          cores: code["cores"].to_i,
           input: JSON.dump(code["input"]),
           output: JSON.dump(code["output"]),
           entrance: JSON.dump(code["entrance"]),
