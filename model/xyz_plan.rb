@@ -151,9 +151,10 @@ module XYZ
     def check_pbs_state
       state = {} # calc_id => state
       user = `whoami`.strip
-      result = `qstat -u #{user} | grep .w003 | awk '{printf("%s %s %s\n",$3, $4, $10)}'`
+      result = `qstat -u #{user} | grep .w003`
       result.split("\n").each do |line|
-        q, name, s = line.split
+        words = line.split
+        q, name, s = words[2], words[3], words[9]
         state[q] ||= []
         s = STATE_ERROR
         s = STATE_RUN if s == "R"
