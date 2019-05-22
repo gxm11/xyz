@@ -16,22 +16,22 @@ module XYZ
           author: @name,
           enable: !!code["enable"],
           cores: code["cores"].to_i,
-          input: JSON.dump(code["input"]),
-          output: JSON.dump(code["output"]),
-          entrance: JSON.dump(code["entrance"]),
-          property: JSON.dump(code["property"]),
-          description: JSON.dump(code["description"]),
+          input: code["input"],
+          output: code["output"],
+          entrance: code["entrance"],
+          property: code["property"],
+          description: code["description"],
         )
         need_refresh = true
       else
         DB_Code.where(name: cname, author: @name).update(
           enable: !!code["enable"],
           cores: code["cores"].to_i,
-          input: JSON.dump(code["input"]),
-          output: JSON.dump(code["output"]),
-          entrance: JSON.dump(code["entrance"]),
-          property: JSON.dump(code["property"]),
-          description: JSON.dump(code["description"]),
+          input: code["input"],
+          output: code["output"],
+          entrance: code["entrance"],
+          property: code["property"],
+          description: code["description"],
           update_at: Sequel::CURRENT_TIMESTAMP,
         )
         need_refresh = ["input", "output", "enable"].inject(false) { |ret, i|

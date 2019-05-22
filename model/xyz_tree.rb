@@ -16,8 +16,8 @@ module XYZ
         Ends << 0
         DB_Code.where(enable: true).each do |code|
           # input 是 string INCAR;INCAR1;INCAR2
-          input = JSON.parse(code[:input])
-          output = JSON.parse(code[:output])
+          input = code[:input]
+          output = code[:output]
           cores = code[:cores]
           text = code[:author] + "\n" + code[:description]
           c = Code.new(code[:id], code[:name], cores, input, output, text)
