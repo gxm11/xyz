@@ -152,7 +152,9 @@ end
 
 get "/task/v2/:task" do
   task = params[:task].to_sym
-  XYZ::Task.run(task, params)
+  if XYZ::Auth.task_check(params)
+    XYZ::Task.run(task, params)
+  end
 end
 # -----------------------------------------------
 # data

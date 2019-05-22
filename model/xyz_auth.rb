@@ -46,5 +46,15 @@ module XYZ
     def active_keys
       DB_PS[:auth_active_key]
     end
+
+    def task_check(params)
+      params["c"] == task_code(params)
+    end
+
+    def task_code(params)
+      if params.keys.include?("calc_id")
+        return OpenSSL::HMAC.hexdigest("SHA256", HMAC_KEY, params["calc_id"].to_s)
+      end
+    end
   end
 end

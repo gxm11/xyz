@@ -239,13 +239,14 @@ module XYZ
     def run_xyz_sh(calc_id, material_id, code_id)
       code = DB_Code.where(id: code_id).first
       callback_url = "http://#{Sinatra_Host}:#{Sinatra_Port}/task/v2"
+      c = Auth.task_code("calc_id" => calc_id)
 
       sh = <<~PBS_SCRIPT
         #PBS -N xyz.#{calc_id}
         #PBS -l nodes=1:ppn=#{code[:cores]}
         #PBS -l Qlist=n24
         
-        curl #{callback_url}/calculation_start?calc_id=#{calc_id}
+        curl #{callback_url}/calculation_start?calc_id=#{calc_id}&c=#{c}
 
         date > output.$PBS_JOBID        
         cd $PBS_O_WORKDIR
@@ -256,7 +257,7 @@ module XYZ
         # Entrance Code Here #
 
         date >> output.$PBS_JOBID
-        curl #{callback_url}/calculation_finish?calc_id=#{calc_id}       
+        curl #{callback_url}/calculation_finish?calc_id=#{calc_id}&c=#{c}
       PBS_SCRIPT
 
       return sh
