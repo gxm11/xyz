@@ -16,10 +16,10 @@ module XYZ
           author: @name,
           enable: !!code["enable"],
           cores: code["cores"].to_i,
-          input: code["input"],
-          output: code["output"],
+          input: JSON.dump(code["input"]),
+          output: JSON.dump(code["output"]),
           entrance: code["entrance"],
-          property: code["property"],
+          property: JSON.dump(code["property"]),
           description: code["description"],
         )
         need_refresh = true
@@ -27,10 +27,10 @@ module XYZ
         DB_Code.where(name: cname, author: @name).update(
           enable: !!code["enable"],
           cores: code["cores"].to_i,
-          input: code["input"],
-          output: code["output"],
+          input: JSON.dump(code["input"]),
+          output: JSON.dump(code["output"]),
           entrance: code["entrance"],
-          property: code["property"],
+          property: JSON.dump(code["property"]),
           description: code["description"],
           update_at: Sequel::CURRENT_TIMESTAMP,
         )
