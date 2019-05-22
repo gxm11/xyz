@@ -232,7 +232,7 @@ module XYZ
         cp $PBS_NODEFILE node
         curl http://#{host}:#{Sinatra_Port}/task/v2/calculation_start?calc_id=#{calc_id}
 
-        #{JSON.parse(code[:entrance])}
+        #{code[:entrance]}
 
         curl http://#{host}:#{Sinatra_Port}/task/v2/calculation_finish?calc_id=#{calc_id}
         
