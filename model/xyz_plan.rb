@@ -226,16 +226,18 @@ module XYZ
         #PBS -l nodes=1:ppn=#{code[:cores]}
         #PBS -l Qlist=n24
         
-        ulimit -s unlimited
-        
+        curl #{callback_url}/calculation_start?calc_id=#{calc_id}
+
+        date > output.$PBS_JOBID        
         cd $PBS_O_WORKDIR
-        cp $PBS_NODEFILE node
-        curl #{callback_url}/calculation_start?calc_id=#{calc_id}
+        cp $PBS_NODEFILE node        
 
+        # Entrance Code Here #
         #{code[:entrance]}
+        # Entrance Code Here #
 
-        curl #{callback_url}/calculation_start?calc_id=#{calc_id}
-        
+        date >> output.$PBS_JOBID
+        curl #{callback_url}/calculation_start?calc_id=#{calc_id}       
       PBS_SCRIPT
 
       return sh
