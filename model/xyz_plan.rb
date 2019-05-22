@@ -117,7 +117,7 @@ module XYZ
       DB_PS[:calculation_plan][pid]
     end
 
-    def generate_avaliable_tasks
+    def avaliable_tasks
       avaliable_tasks = []
       # 1. 检查所有的计划，统计任务列表
       for plan_id, plan in DB_PS[:calculation_plan]
@@ -162,13 +162,13 @@ module XYZ
       end
     end
 
-    def update_pbs_plan
+    def update_plan
       tasks = avaliable_tasks
       states = check_pbs_state
       # 对 queue cmt 进行处理
       [["cmt", 2]].each do |q, n_jobs|
         _sleep = states[q].select { |name, s| s == STATE_SLEEP }.size
-        if _sleep <= n_jobs
+        if _sleep < n_jobs
           ret = wakeup_calculation(q)
           if !ret
             prepare_calculation(q, tasks.sample(n_jobs))
@@ -213,8 +213,28 @@ module XYZ
 
     def run_xyz_sh(calc_id, material_id, code)
       sh = <<~PBS_SCRIPT
+        #PBS -N xyz.#{calc_id}
+        #PBS -l nodes=1:ppn=#{code.cores}
+        #PBS -l Qlist=n24
+        
+        ulimit -s unlimited
+        
+        cd $PBS_O_WORKDIR
+        cp $PBS_NODEFILE node
+        curl http://localhost:#{settings.port}/task/v2/calculation_start?calc_id=#{calc_id}
+
+        #{code.entrance}
+
+        curl http://localhost:#{settings.port}/task/v2/calculation_finish?calc_id=#{calc_id}
         
       PBS_SCRIPT
+
+      sh.gsub!("__CALC_ID__", calc_id.to_s)
+      sh.gsub!("__CORES__", code.cores.to_s)
+      sh.gsub!("__SINATRA_PORT__", settings.port.to_s)
+      sh.gsub!("__ENTRANCE__", code.entrance)
+
+      return sh
     end
   end
 

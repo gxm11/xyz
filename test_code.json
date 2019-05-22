@@ -36,7 +36,7 @@
         "cores": "24",
         "input": "f",
         "output": "openmx.out",
-        "entrance": "# - entrance - #",
+        "entrance": "# - entrance - #\nsleep 15\n",
         "property": ""
     }
 ]

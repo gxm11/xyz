@@ -125,7 +125,7 @@ end
 # -----------------------------------------------
 # task
 # -----------------------------------------------
-post "/task/:v/:task" do
+post "/task/v1/:task" do
   key = XYZ::Auth.auth_key(session[:auth])
   if key
     user = key.split("@").first
@@ -134,10 +134,7 @@ post "/task/:v/:task" do
     # -------------------------------------------
     # produce result
     # -------------------------------------------
-    case params[:v]
-    when "v1" # v1: Back to referrer
-      redirect request.referrer
-    end
+    redirect request.referrer
   else
     redirect "/login"
   end
@@ -153,6 +150,12 @@ get "/task/v1/:task" do
   end
 end
 
+get "/task/v2/:task" do
+  if request.ip == "127.0.0.1"
+    task = params[:task].to_sym
+    XYZ::Task.run(task, params)
+  end
+end
 # -----------------------------------------------
 # data
 # -----------------------------------------------

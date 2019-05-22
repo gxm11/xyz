@@ -207,7 +207,7 @@ module XYZ
   end
 
   Task.add(:update_plan) do
-    XYZ::Plan.update
+    XYZ::Plan.update_plan
   end
 end
 
