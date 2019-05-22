@@ -1,8 +1,9 @@
 %h5 Plan - Console
 
+%p Active
+  =@plan.active
+  
 - tree_nodes = @tree.nodes - [0]
-=@plan.active
-
 %table
   %tr
     %th{width: "1%"} mid
@@ -40,5 +41,5 @@
     function(){
       location.reload()
     },
-    5000
+    30000
   )
