@@ -209,15 +209,17 @@ module XYZ
           i, path = input_file_get(material_id, child_cid, input)
           FileUtils.cp(path, folder + "/" + i)
         end
-        sh = run_xyz_sh(calc_id, material_id, code)
+        sh = run_xyz_sh(calc_id, material_id, code_id)
         IO.binwrite(folder + "/" + "run.xyz.sh", sh)
       end
     end
 
-    def run_xyz_sh(calc_id, material_id, code)
+    def run_xyz_sh(calc_id, material_id, code_id)
+      code = DB_Code.where(id: code_id)
+
       sh = <<~PBS_SCRIPT
         #PBS -N xyz.#{calc_id}
-        #PBS -l nodes=1:ppn=#{code.cores}
+        #PBS -l nodes=1:ppn=#{code[:cores]}
         #PBS -l Qlist=n24
         
         ulimit -s unlimited
@@ -226,16 +228,11 @@ module XYZ
         cp $PBS_NODEFILE node
         curl http://localhost:#{Sinatra_Port}/task/v2/calculation_start?calc_id=#{calc_id}
 
-        #{code.entrance}
+        #{code[:entrance]}
 
         curl http://localhost:#{Sinatra_Port}/task/v2/calculation_finish?calc_id=#{calc_id}
         
       PBS_SCRIPT
-
-      sh.gsub!("__CALC_ID__", calc_id.to_s)
-      sh.gsub!("__CORES__", code.cores.to_s)
-      sh.gsub!("__SINATRA_PORT__", settings.port.to_s)
-      sh.gsub!("__ENTRANCE__", code.entrance)
 
       return sh
     end
