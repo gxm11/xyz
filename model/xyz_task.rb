@@ -221,7 +221,7 @@ module XYZ
 
   Task.add(:plan_toggle_active) do |user, params|
     plan_id = params["plan_id"].to_i
-    plan = XYZ::Plan.load(plan_id)
+    plan = XYZ::Plan.plan_toggle_active(plan_id)
     plan.active = !plan.active
   end
 end

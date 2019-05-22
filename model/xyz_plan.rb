@@ -274,6 +274,13 @@ module XYZ
     def load(plan_id)
       DB_PS[:calculation_plan][plan_id]
     end
+
+    def plan_toggle_active(plan_id, active = true)
+      DB_PS.transaction do |db|
+        plan = db[:calculation_plan][plan_id]
+        plan.active = !plan.active
+      end
+    end
   end
 
   class User
