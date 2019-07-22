@@ -1,3 +1,6 @@
+# Deprecated
+> This project is now deprecated.
+
 # xyz-repl
 The xyz-project running on repl.it, framework is sinatra.
 
